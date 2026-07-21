@@ -1,0 +1,18 @@
+gipypowers
+Copyright (c) 2026 gipyware
+
+This product combines and adapts three MIT-licensed projects:
+
+- caveman — Copyright (c) Julius Brussee — https://github.com/JuliusBrussee/caveman
+  The always-on "how you talk" (terse output) layer is derived from caveman's
+  skills/caveman/SKILL.md (full intensity level).
+
+- ponytail — Copyright (c) Dietrich Gebert — https://github.com/DietrichGebert/ponytail
+  The always-on "what you build" (YAGNI / minimal code) layer is derived from
+  ponytail's skills/ponytail/SKILL.md (full intensity level).
+
+- superpowers — Copyright (c) Jesse Vincent (obra) — https://github.com/obra/superpowers
+  The skill workflow (skills/*) is a compressed adaptation of superpowers 6.1.1.
+
+Each project is MIT-licensed; their permission notices are reproduced under
+their respective source repositories. This adaptation is itself MIT-licensed.
