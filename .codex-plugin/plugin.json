@@ -1,0 +1,20 @@
+{
+  "name": "gipypowers",
+  "version": "0.1.0",
+  "description": "Canonical gipyware plugin: always-on caveman + ponytail plus the superpowers skill workflow, tuned for Codex (gpt-5.x) and token efficiency.",
+  "author": { "name": "gipyware", "url": "https://gipyware.com" },
+  "license": "MIT",
+  "keywords": ["skills", "tdd", "debugging", "yagni", "token-efficiency", "codex"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks-codex.json",
+  "interface": {
+    "displayName": "gipypowers",
+    "shortDescription": "Terse, lazy-minimal engineering + planning/TDD/debugging workflows",
+    "longDescription": "Always-on caveman (terse output) and ponytail (YAGNI, stdlib-first, smallest correct diff) plus the superpowers skill workflow — brainstorming, planning, TDD, debugging, review — tuned for Codex and a 10% context budget.",
+    "developerName": "gipyware",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write", "Instructions", "Lifecycle hooks"],
+    "defaultPrompt": ["I've got an idea for something I'd like to build.", "Let's add a feature to this project."],
+    "brandColor": "#0F172A"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "gipypowers",
+  "description": "Canonical gipyware plugin combining caveman, ponytail, and superpowers.",
+  "owner": { "name": "gipyware", "url": "https://gipyware.com" },
+  "plugins": [
+    {
+      "name": "gipypowers",
+      "description": "Always-on terse output + lazy-minimal code + the superpowers skill workflow, tuned for Codex.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "gipypowers",
+  "description": "Canonical gipyware plugin: always-on terse output (caveman) + lazy-minimal engineering (ponytail) + the superpowers skill workflow, tuned for Codex and token efficiency.",
+  "version": "0.1.0",
+  "author": { "name": "gipyware", "url": "https://gipyware.com" },
+  "license": "MIT",
+  "keywords": ["skills", "tdd", "debugging", "yagni", "token-efficiency", "codex"],
+  "hooks": "./hooks/hooks.json"
+}
