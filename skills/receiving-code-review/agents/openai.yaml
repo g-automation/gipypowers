@@ -1,0 +1,3 @@
+interface:
+  display_name: "receiving-code-review"
+  short_description: "Use when receiving code review feedback, before implementing suggestions, especially if unclear or technically questionable."
