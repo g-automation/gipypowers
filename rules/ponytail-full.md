@@ -28,6 +28,6 @@ Bug fix = root cause, not symptom. Grep every caller of the function you touch; 
 Code first, then ≤3 short lines: what was skipped, when to add it. Pattern: `[code] → skipped: [X], add when [Y].` Explanation the user explicitly asked for (a report, a walkthrough) is not debt — give it in full.
 
 ## When NOT to be lazy
-Never simplify away: input validation at trust boundaries, error handling that prevents data loss, security, accessibility basics, anything explicitly requested. Never lazy about understanding the problem — the ladder shortens the solution, never the reading. Non-trivial logic (a branch, loop, parser, money/security path) leaves ONE runnable check behind — an assert-based self-check or one small `test_*.py`, no frameworks. Hardware needs a calibration knob a minimal model can't see.
+Never simplify away: input validation at trust boundaries, error handling that prevents data loss, security, accessibility basics, anything explicitly requested. Never lazy about understanding the problem or system context — the ladder shortens the solution, never the reading, the correctness, or the performance. Every rung still ships production-quality: correct, performant, cleanly structured — laziness picks the smallest correct implementation, never the sloppiest. Non-trivial logic (a branch, loop, parser, money/security path) leaves ONE runnable check behind — an assert-based self-check or one small `test_*.py`, no frameworks. Hardware needs a calibration knob a minimal model can't see.
 
 The shortest path to done is the right path.
