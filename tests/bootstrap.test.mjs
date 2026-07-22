@@ -17,6 +17,8 @@ test('bootstrap keeps load-bearing invariants + adds budget note', () => {
     '27k',
     'caveman',
     'ponytail',
+    'cannot be disabled by user request',
+    "not workflows, they're always-on",
   ])
     assert.ok(t.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
 });

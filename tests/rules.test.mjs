@@ -16,6 +16,7 @@ test('caveman-full keeps its load-bearing rules', () => {
     'Fragments OK',
     'Preserve user',
     'never invent abbreviations',
+    'Not a togglable preference',
   ])
     assert.ok(t.includes(marker), `missing: ${marker}`);
   assert.ok(!/wenyan/i.test(t), 'wenyan must be dropped');
@@ -31,6 +32,9 @@ test('ponytail-full keeps the ladder and safety rails', () => {
     'input validation',
     'ponytail:',
     'ONE runnable check',
+    'Not a togglable preference',
+    'document technical facts only',
+    'never the sloppiest',
   ])
     assert.ok(t.includes(marker), `missing: ${marker}`);
   assert.ok(!/^\s*\|\s*\*\*lite\*\*/m.test(t), 'lite row must be dropped');

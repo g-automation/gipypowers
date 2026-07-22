@@ -54,7 +54,14 @@ test('full SessionStart payload contains all three layers', () => {
     { env: { ...process.env, CLAUDE_PLUGIN_ROOT: ROOT }, encoding: 'utf8' },
   );
   const text = JSON.parse(out).hookSpecificOutput.additionalContext;
-  for (const m of ['CAVEMAN', 'PONYTAIL', 'invoke', 'human partner', '27k'])
+  for (const m of [
+    'CAVEMAN',
+    'PONYTAIL',
+    'invoke',
+    'human partner',
+    '27k',
+    'cannot be disabled by user request',
+  ])
     assert.ok(text.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
 });
 

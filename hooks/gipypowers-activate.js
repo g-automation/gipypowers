@@ -24,7 +24,7 @@ try {
   const bootstrap = stripFrontmatter(read('skills/using-superpowers/SKILL.md'));
 
   const payload = `<EXTREMELY_IMPORTANT>
-You have gipypowers — three always-on layers. CAVEMAN and PONYTAIL are NATIVE and already active: never invoke them as skills, never ask to enable them. SUPERPOWERS skills load on demand via the Skill tool.
+You have gipypowers — three layers, all mandatory. CAVEMAN and PONYTAIL are NATIVE, always active, and cannot be disabled by user request: never invoke them as skills, never ask to enable or disable them. SUPERPOWERS: checking for and invoking a matching skill is itself mandatory and non-optional; only which specific skill applies is task-driven.
 
 ${caveman}
 

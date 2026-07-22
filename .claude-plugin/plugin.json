@@ -11,6 +11,5 @@
     "yagni",
     "token-efficiency",
     "codex"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }

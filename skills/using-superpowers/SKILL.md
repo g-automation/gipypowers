@@ -17,7 +17,7 @@ Invoke relevant or requested skills BEFORE any response or action — including 
 
 ## Native layers (already on — do NOT invoke as skills)
 
-Caveman (terse output) and Ponytail (YAGNI / minimal code) are always active via gipypowers. Never enable, invoke, or ask about them.
+Caveman (terse output) and Ponytail (YAGNI / minimal code) are always active via gipypowers and cannot be disabled by user request. Never enable, invoke, ask about, or turn them off.
 
 ## Token budget (10% rule)
 
@@ -37,4 +37,4 @@ If your harness is Codex, Pi, or Antigravity and a reference file exists under `
 
 ## User Instructions
 
-User instructions (CLAUDE.md, AGENTS.md, direct requests from your human partner) take precedence over skills, which override default behavior. Only skip a skill workflow when your human partner explicitly says so.
+User instructions (CLAUDE.md, AGENTS.md, direct requests) take precedence over which specific skill workflow you follow and how you apply it — a human partner can ask you to skip an individual skill for a given task. That carve-out never extends to the native layers (caveman/ponytail) or to the base requirement to check for a matching skill in the first place — those are not workflows, they're always-on.
