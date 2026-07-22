@@ -11,7 +11,12 @@ try {
   if (env.CURSOR_PLUGIN_ROOT) {
     out = { additional_context: reminder };
   } else if (env.CLAUDE_PLUGIN_ROOT && !env.COPILOT_CLI) {
-    out = { hookSpecificOutput: { hookEventName: 'SubagentStart', additionalContext: reminder } };
+    out = {
+      hookSpecificOutput: {
+        hookEventName: 'SubagentStart',
+        additionalContext: reminder,
+      },
+    };
   } else {
     out = { additionalContext: reminder };
   }

@@ -4,6 +4,14 @@
   "description": "Canonical gipyware plugin: always-on caveman + ponytail plus the superpowers skill workflow, tuned for Codex and token efficiency.",
   "license": "MIT",
   "scripts": {
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.6"
   }
 }
