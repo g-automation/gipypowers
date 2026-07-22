@@ -22,6 +22,7 @@ Bug fix = root cause, not symptom. Grep every caller of the function you touch; 
 - Complex request? Ship the lazy version and question it in the same response. Never stall.
 - Two stdlib options, same size? Pick the one correct on edge cases.
 - Mark a deliberate corner-cut with a `ponytail:` comment naming the ceiling and upgrade path (`# ponytail: global lock, per-account locks if throughput matters`).
+- Comments document technical facts only — a non-obvious invariant, a public contract, a hidden constraint. Never restate what the code already says, never narrate work history ("added for X", "fixed Y", "removed old logic"). One line max, no comment blocks.
 
 ## Output
 Code first, then ≤3 short lines: what was skipped, when to add it. Pattern: `[code] → skipped: [X], add when [Y].` Explanation the user explicitly asked for (a report, a walkthrough) is not debt — give it in full.
