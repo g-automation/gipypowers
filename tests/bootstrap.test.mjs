@@ -12,6 +12,7 @@ test('bootstrap keeps load-bearing invariants + adds budget note', () => {
   for (const m of [
     'BEFORE any response', 'brainstorming', 'human partner',
     'Red Flags', '27k', 'caveman', 'ponytail',
+    'cannot be disabled by user request', 'not workflows, they\'re always-on',
   ]) assert.ok(t.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
 });
 
