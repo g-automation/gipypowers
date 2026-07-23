@@ -1,6 +1,6 @@
 {
   "name": "gipypowers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Canonical gipyware plugin: always-on caveman + ponytail plus the superpowers skill workflow, tuned for Codex and token efficiency.",
   "license": "MIT",
   "scripts": {
