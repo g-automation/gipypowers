@@ -8,7 +8,7 @@ import { dirname, join } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const run = (env) =>
   execFileSync('node', [join(ROOT, 'hooks/gipypowers-activate.js')], {
-    env: { ...process.env, ...env },
+    env: { ...process.env, GIPYPOWERS_NO_UPDATE_CHECK: '1', ...env },
     encoding: 'utf8',
   });
 
