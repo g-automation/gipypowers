@@ -51,7 +51,14 @@ test('full SessionStart payload contains all three layers', () => {
   const out = execFileSync(
     'node',
     [join(ROOT, 'hooks/gipypowers-activate.js')],
-    { env: { ...process.env, CLAUDE_PLUGIN_ROOT: ROOT }, encoding: 'utf8' },
+    {
+      env: {
+        ...process.env,
+        CLAUDE_PLUGIN_ROOT: ROOT,
+        GIPYPOWERS_NO_UPDATE_CHECK: '1',
+      },
+      encoding: 'utf8',
+    },
   );
   const text = JSON.parse(out).hookSpecificOutput.additionalContext;
   for (const m of [
@@ -69,7 +76,14 @@ test('always-resident payload under ~2500 tokens (1875 words)', () => {
   const out = execFileSync(
     'node',
     [join(ROOT, 'hooks/gipypowers-activate.js')],
-    { env: { ...process.env, CLAUDE_PLUGIN_ROOT: ROOT }, encoding: 'utf8' },
+    {
+      env: {
+        ...process.env,
+        CLAUDE_PLUGIN_ROOT: ROOT,
+        GIPYPOWERS_NO_UPDATE_CHECK: '1',
+      },
+      encoding: 'utf8',
+    },
   );
   const text = JSON.parse(out).hookSpecificOutput.additionalContext;
   const words = text.split(/\s+/).filter(Boolean).length;

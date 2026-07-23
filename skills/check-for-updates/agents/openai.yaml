@@ -1,0 +1,3 @@
+interface:
+  display_name: 'check-for-updates'
+  short_description: 'Use when checking for or installing a gipypowers update.'
