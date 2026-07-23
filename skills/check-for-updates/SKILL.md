@@ -79,9 +79,15 @@ host-managed-cache path never mutates anything here, so there is nothing to
 clear; the passive check will naturally see the new version on its own next
 throttled run.
 
+Re-reads the version from disk rather than reusing an earlier variable —
+after the pull, the checked-out `package.json` IS the new version, so this
+block is self-contained and correct even if run as its own invocation:
+
 ```bash
+ROOT="${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}"
+NEW_VERSION=$(node -pe "JSON.parse(require('fs').readFileSync('$ROOT/package.json','utf8')).version")
 mkdir -p ~/.gipypowers
-node -e "require('fs').writeFileSync(require('os').homedir()+'/.gipypowers/update-check.json', JSON.stringify({lastChecked: Date.now(), latestVersion: process.argv[1]}))" "$REMOTE_VERSION"
+node -e "require('fs').writeFileSync(require('os').homedir()+'/.gipypowers/update-check.json', JSON.stringify({lastChecked: Date.now(), latestVersion: process.argv[1]}))" "$NEW_VERSION"
 ```
 
 This keeps the passive session-start notice from repeating once the user is
