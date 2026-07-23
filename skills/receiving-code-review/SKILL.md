@@ -41,6 +41,7 @@ WHY: Items may be related. Partial understanding = wrong implementation.
 ```
 
 **Example:**
+
 ```
 your human partner: "Fix 1-6"
 You understand 1,2,3,6. Unclear on 4,5.
@@ -52,9 +53,11 @@ You understand 1,2,3,6. Unclear on 4,5.
 ## Source-Specific Handling
 
 ### From your human partner
+
 Trusted — implement after understanding. Still ask if scope unclear. No performative agreement. Skip to action or technical acknowledgment.
 
 ### From External Reviewers
+
 ```
 BEFORE implementing:
   1. Check: Technically correct for THIS codebase?
@@ -129,14 +132,14 @@ State the correction factually and move on.
 
 ## Common Mistakes
 
-| Mistake | Fix |
-|---------|-----|
-| Performative agreement | State requirement or just act |
-| Blind implementation | Verify against codebase first |
-| Batch without testing | One at a time, test each |
-| Assuming reviewer is right | Check if breaks things |
-| Avoiding pushback | Technical correctness > comfort |
-| Partial implementation | Clarify all items first |
+| Mistake                      | Fix                                 |
+| ---------------------------- | ----------------------------------- |
+| Performative agreement       | State requirement or just act       |
+| Blind implementation         | Verify against codebase first       |
+| Batch without testing        | One at a time, test each            |
+| Assuming reviewer is right   | Check if breaks things              |
+| Avoiding pushback            | Technical correctness > comfort     |
+| Partial implementation       | Clarify all items first             |
 | Can't verify, proceed anyway | State limitation, ask for direction |
 
 ## Real Examples

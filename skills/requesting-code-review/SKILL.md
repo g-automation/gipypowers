@@ -18,6 +18,7 @@ Dispatch a code reviewer subagent to catch issues before they cascade. The revie
 ## How to Request
 
 **1. Get git SHAs:**
+
 ```bash
 BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
 HEAD_SHA=$(git rev-parse HEAD)
@@ -26,6 +27,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 **2. Dispatch code reviewer subagent:** Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md](code-reviewer.md).
 
 **Placeholders:**
+
 - `{DESCRIPTION}` — brief summary of what you built
 - `{PLAN_OR_REQUIREMENTS}` — what it should do
 - `{BASE_SHA}` — starting commit

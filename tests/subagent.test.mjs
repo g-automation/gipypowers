@@ -6,8 +6,10 @@ import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const run = (env) =>
-  execFileSync('node', [join(ROOT, 'hooks/gipypowers-subagent.js')],
-    { env: { ...process.env, ...env }, encoding: 'utf8' });
+  execFileSync('node', [join(ROOT, 'hooks/gipypowers-subagent.js')], {
+    env: { ...process.env, ...env },
+    encoding: 'utf8',
+  });
 
 test('subagent hook emits valid JSON with the reminder', () => {
   const obj = JSON.parse(run({ CLAUDE_PLUGIN_ROOT: ROOT }));

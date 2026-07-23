@@ -24,6 +24,7 @@ BRANCH=$(git branch --show-current)
 ```
 
 **Submodule guard:** `GIT_DIR != GIT_COMMON` is also true inside git submodules. Before concluding "already in a worktree," verify you are not in a submodule:
+
 ```bash
 # If this returns a path, you're in a submodule, not a worktree — treat as normal repo
 git rev-parse --show-superproject-working-tree 2>/dev/null
@@ -32,12 +33,14 @@ git rev-parse --show-superproject-working-tree 2>/dev/null
 **If `GIT_DIR != GIT_COMMON` (and not a submodule):** You are already in a linked worktree. Skip to Step 2 (Project Setup). Do NOT create another worktree.
 
 Report with branch state:
+
 - On a branch: "Already in isolated workspace at `<path>` on branch `<name>`."
 - Detached HEAD: "Already in isolated workspace at `<path>` (detached HEAD, externally managed). Branch creation needed at finish time."
 
 **If `GIT_DIR == GIT_COMMON` (or in a submodule):** You are in a normal repo checkout.
 
 Has the user already indicated their worktree preference in your instructions? If not, ask for consent before creating a worktree:
+
 > "Would you like me to set up an isolated worktree? It protects your current branch from changes."
 
 Honor any existing declared preference without asking. If the user declines consent, work in place and skip to Step 2.
@@ -74,9 +77,11 @@ Follow this priority order. Explicit user preference always beats observed files
 #### Safety Verification (project-local directories only)
 
 **MUST verify directory is ignored before creating worktree:**
+
 ```bash
 git check-ignore -q .worktrees 2>/dev/null || git check-ignore -q worktrees 2>/dev/null
 ```
+
 **If NOT ignored:** Add to .gitignore, commit the change, then proceed.
 
 **Why critical:** Prevents accidentally committing worktree contents to repository.
@@ -94,6 +99,7 @@ cd "$path"
 ## Step 2: Project Setup
 
 Auto-detect and run appropriate setup:
+
 ```bash
 if [ -f package.json ]; then npm install; fi
 if [ -f Cargo.toml ]; then cargo build; fi
@@ -105,13 +111,16 @@ if [ -f go.mod ]; then go mod download; fi
 ## Step 3: Verify Clean Baseline
 
 Run tests to ensure workspace starts clean:
+
 ```bash
 npm test / cargo test / pytest / go test ./...
 ```
+
 **If tests fail:** Report failures, ask whether to proceed or investigate.
 **If tests pass:** Report ready.
 
 ### Report
+
 ```
 Worktree ready at <full-path>
 Tests passing (<N> tests, 0 failures)
@@ -120,20 +129,20 @@ Ready to implement <feature-name>
 
 ## Quick Reference
 
-| Situation | Action |
-|-----------|--------|
-| Already in linked worktree | Skip creation (Step 0) |
-| In a submodule | Treat as normal repo (Step 0 guard) |
-| Native worktree tool available | Use it (Step 1a) |
-| No native tool | Git worktree fallback (Step 1b) |
-| `.worktrees/` exists | Use it (verify ignored) |
-| `worktrees/` exists | Use it (verify ignored) |
-| Both exist | Use `.worktrees/` |
-| Neither exists | Check instruction file, then default `.worktrees/` |
-| Directory not ignored | Add to .gitignore + commit |
-| Permission error on create | Sandbox fallback, work in place |
-| Tests fail during baseline | Report failures + ask |
-| No package.json/Cargo.toml | Skip dependency install |
+| Situation                      | Action                                             |
+| ------------------------------ | -------------------------------------------------- |
+| Already in linked worktree     | Skip creation (Step 0)                             |
+| In a submodule                 | Treat as normal repo (Step 0 guard)                |
+| Native worktree tool available | Use it (Step 1a)                                   |
+| No native tool                 | Git worktree fallback (Step 1b)                    |
+| `.worktrees/` exists           | Use it (verify ignored)                            |
+| `worktrees/` exists            | Use it (verify ignored)                            |
+| Both exist                     | Use `.worktrees/`                                  |
+| Neither exists                 | Check instruction file, then default `.worktrees/` |
+| Directory not ignored          | Add to .gitignore + commit                         |
+| Permission error on create     | Sandbox fallback, work in place                    |
+| Tests fail during baseline     | Report failures + ask                              |
+| No package.json/Cargo.toml     | Skip dependency install                            |
 
 ## Common Mistakes
 

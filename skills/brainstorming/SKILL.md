@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: 'You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.'
 ---
 
 # Brainstorming Ideas Into Designs
@@ -14,6 +14,7 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 </HARD-GATE>
 
 ## Token budget (gipypowers)
+
 Context window is 272k–400k tokens. Never let this session's working-context, or any subagent prompt you construct, exceed ~27k tokens (10% of the 272k floor). Delegate to isolated subagents, persist bulk output (plans, diffs, reviews) to files, and keep only pointers in context.
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
@@ -137,7 +138,8 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
 
-**Offering the companion (just-in-time):** Do NOT offer it upfront. Wait until a question would genuinely be clearer shown than told — a real mockup / layout / diagram question, not merely a UI *topic*. The first time that happens, offer it then, as its own message:
+**Offering the companion (just-in-time):** Do NOT offer it upfront. Wait until a question would genuinely be clearer shown than told — a real mockup / layout / diagram question, not merely a UI _topic_. The first time that happens, offer it then, as its own message:
+
 > "This next part might be easier if I show you — I can put together mockups, diagrams, and comparisons in a browser tab as we go. It's still new and can be token-intensive. Want me to? I'll open it for you."
 
 **This offer MUST be its own message.** Only the offer — no clarifying question, summary, or other content. Wait for the user's response. If they accept, start the server with `--open` so their browser opens to the first screen automatically. If they decline, continue text-only and don't offer again unless they raise it.
@@ -147,7 +149,7 @@ A browser-based companion for showing mockups, diagrams, and visual options duri
 - **Use the browser** for content that IS visual — mockups, wireframes, layout comparisons, architecture diagrams, side-by-side visual designs
 - **Use the terminal** for content that is text — requirements questions, conceptual choices, tradeoff lists, A/B/C/D text options, scope decisions
 
-A UI *topic* is not automatically a visual question — e.g. "What does personality mean in this context?" is conceptual (terminal); "Which wizard layout works better?" is visual (browser).
+A UI _topic_ is not automatically a visual question — e.g. "What does personality mean in this context?" is conceptual (terminal); "Which wizard layout works better?" is visual (browser).
 
 If they agree to the companion, read the detailed guide before proceeding:
 `skills/brainstorming/visual-companion.md`

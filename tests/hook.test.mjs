@@ -7,8 +7,10 @@ import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const run = (env) =>
-  execFileSync('node', [join(ROOT, 'hooks/gipypowers-activate.js')],
-    { env: { ...process.env, ...env }, encoding: 'utf8' });
+  execFileSync('node', [join(ROOT, 'hooks/gipypowers-activate.js')], {
+    env: { ...process.env, ...env },
+    encoding: 'utf8',
+  });
 
 test('Claude envelope is nested and carries all three layers', () => {
   const obj = JSON.parse(run({ CLAUDE_PLUGIN_ROOT: ROOT }));
@@ -32,7 +34,9 @@ test('always-on rule layers stay under the word budget', () => {
   // Gate the two always-resident rule files (~2500-token target ≈ 1875 words).
   // The compressed using-superpowers bootstrap is added in Task 7 and is
   // re-checked by the aggregate gate in Task 9.
-  const words = (p) => readFileSync(join(ROOT, p), 'utf8').split(/\s+/).filter(Boolean).length;
-  const total = words('rules/caveman-full.md') + words('rules/ponytail-full.md');
+  const words = (p) =>
+    readFileSync(join(ROOT, p), 'utf8').split(/\s+/).filter(Boolean).length;
+  const total =
+    words('rules/caveman-full.md') + words('rules/ponytail-full.md');
   assert.ok(total < 900, `rule layers too large: ${total} words`);
 });
