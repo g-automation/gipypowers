@@ -6,6 +6,7 @@ description: Use when facing 2+ independent tasks that can be worked on without 
 # Dispatching Parallel Agents
 
 ## Token budget (gipypowers)
+
 Context window is 272k–400k tokens. Never let this session's working-context, or any subagent prompt you construct, exceed ~27k tokens (10% of the 272k floor). Delegate to isolated subagents, persist bulk output (plans, diffs, reviews) to files, and keep only pointers in context.
 
 ## Overview
@@ -37,12 +38,14 @@ digraph when_to_use {
 ```
 
 **Use when:**
+
 - 3+ test files failing with different root causes
 - Multiple subsystems broken independently
 - Each problem can be understood without context from others
 - No shared state between investigations
 
 **Don't use when:**
+
 - Failures are related (fix one might fix others)
 - Need to understand full system state
 - Agents would interfere with each other
@@ -52,6 +55,7 @@ digraph when_to_use {
 ### 1. Identify Independent Domains
 
 Group failures by what's broken, e.g.:
+
 - File A tests: Tool approval flow
 - File B tests: Batch completion behavior
 - File C tests: Abort functionality
@@ -61,6 +65,7 @@ Each domain is independent — fixing tool approval doesn't affect abort tests.
 ### 2. Create Focused Agent Tasks
 
 Each agent gets:
+
 - **Specific scope:** One test file or subsystem
 - **Clear goal:** Make these tests pass
 - **Constraints:** Don't change other code
@@ -84,6 +89,7 @@ When agents return: read each summary, verify fixes don't conflict, run the full
 ## Agent Prompt Structure
 
 Good agent prompts are:
+
 1. **Focused** - One clear problem domain
 2. **Self-contained** - All context needed to understand the problem
 3. **Specific about output** - What should the agent return?
@@ -133,6 +139,7 @@ Return: Summary of what you found and what you fixed.
 ## Real Example from Session
 
 6 test failures across 3 files after a major refactoring, split into 3 independent domains (abort logic, batch completion, race conditions) and dispatched as 3 parallel agents:
+
 - Agent 1: replaced timeouts with event-based waiting
 - Agent 2: fixed an event structure bug (threadId in wrong place)
 - Agent 3: added a wait for async tool execution to complete
@@ -149,6 +156,7 @@ Result: all fixes independent, no conflicts, full suite green — 3 problems sol
 ## Verification
 
 After agents return:
+
 1. **Review each summary** - Understand what changed
 2. **Check for conflicts** - Did agents edit same code?
 3. **Run full suite** - Verify all fixes work together

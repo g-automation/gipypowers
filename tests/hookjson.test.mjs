@@ -9,9 +9,15 @@ const j = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 
 test('claude hooks.json registers SessionStart + SubagentStart with CLAUDE_PLUGIN_ROOT', () => {
   const h = j('hooks/hooks.json').hooks;
-  assert.ok(h.SessionStart[0].hooks[0].command.includes('${CLAUDE_PLUGIN_ROOT}'));
-  assert.ok(h.SessionStart[0].hooks[0].command.includes('gipypowers-activate.js'));
-  assert.ok(h.SubagentStart[0].hooks[0].command.includes('gipypowers-subagent.js'));
+  assert.ok(
+    h.SessionStart[0].hooks[0].command.includes('${CLAUDE_PLUGIN_ROOT}'),
+  );
+  assert.ok(
+    h.SessionStart[0].hooks[0].command.includes('gipypowers-activate.js'),
+  );
+  assert.ok(
+    h.SubagentStart[0].hooks[0].command.includes('gipypowers-subagent.js'),
+  );
 });
 
 test('codex hooks.json uses PLUGIN_ROOT and startup|resume|clear matcher', () => {

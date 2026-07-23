@@ -31,17 +31,19 @@ architecture (caveman, ponytail, using-superpowers bootstrap).
 ## Changes
 
 ### A. Install bug fix
+
 - `.claude-plugin/plugin.json`: remove the `hooks` key. Claude Code
   auto-loads `hooks/hooks.json` from the standard path without a manifest
   declaration; declaring it explicitly causes the duplicate-load error
   reported at install (`Failed to load hooks from
-  .../hooks/hooks.json: Duplicate hooks file detected ...`).
+.../hooks/hooks.json: Duplicate hooks file detected ...`).
 - `.codex-plugin/plugin.json` is untouched — it points at a non-standard
   filename (`hooks-codex.json`), so no duplicate-load risk exists there.
 - `tests/manifest.test.mjs`: update the claude-manifest test to assert
   `m.hooks` is `undefined` instead of `'./hooks/hooks.json'`.
 
 ### B. Non-disableable native layers (Rule 1)
+
 - `hooks/gipypowers-activate.js`: reword the `<EXTREMELY_IMPORTANT>` preamble
   so it states plainly that caveman/ponytail cannot be disabled by user
   request, and that checking for a matching superpowers skill is itself
@@ -61,6 +63,7 @@ architecture (caveman, ponytail, using-superpowers bootstrap).
     matching skill in the first place.
 
 ### C. Comment policy (Rule 2)
+
 New bullet in `rules/ponytail-full.md`'s "Rules" section: comments document
 technical facts only (a non-obvious invariant, a public contract, a hidden
 constraint) — never restate what code already says, never narrate work
@@ -68,8 +71,9 @@ history ("added for X", "fixed Y", "removed old logic"). One line max, no
 comment blocks.
 
 ### D. Quality/performance/context priority (Rule 3)
+
 Strengthen `rules/ponytail-full.md`'s "When NOT to be lazy" section: laziness
-picks the smallest *correct* implementation, never the sloppiest —
+picks the smallest _correct_ implementation, never the sloppiest —
 correctness, performance, and clean structure are the baseline the ladder
 operates within, not something it discounts. Understanding system/context
 stays a hard prerequisite (reinforces existing wording, made explicit

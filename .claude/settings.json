@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "path=$(jq -r '.tool_input.file_path // .tool_response.filePath'); echo \"$path\" | grep -qE '/(skills|hooks|rules|tests)/' && (cd \"$CLAUDE_PROJECT_DIR\" && npm test); true",
+            "timeout": 30,
+            "statusMessage": "Running gipypowers content-invariant tests..."
+          }
+        ]
+      }
+    ]
+  }
+}
