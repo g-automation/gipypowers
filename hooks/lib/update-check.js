@@ -116,7 +116,7 @@ async function getUpdateNotice(root) {
     }
 
     if (cache.latestVersion && isNewerVersion(cache.latestVersion, local)) {
-      return `gipypowers v${cache.latestVersion} available (you have v${local}) — run /check-for-updates`;
+      return `gipypowers v${cache.latestVersion} available (you have v${local}) — run the check-for-updates skill`;
     }
     return '';
   } catch (_) {
