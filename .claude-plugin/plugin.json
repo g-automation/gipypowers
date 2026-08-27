@@ -1,6 +1,6 @@
 {
   "name": "gipypowers",
-  "description": "Canonical gipyware plugin: always-on terse output (caveman) + lazy-minimal engineering (ponytail) + the superpowers skill workflow, tuned for Codex and token efficiency.",
+  "description": "Canonical gipyware plugin: always-on terse, ADHD-friendly, anti-slop output + lazy-minimal engineering + the on-demand superpowers workflow.",
   "version": "0.2.0",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
