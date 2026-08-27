@@ -16,6 +16,8 @@ test('subagent hook emits valid JSON with the reminder', () => {
   const text = obj.hookSpecificOutput.additionalContext;
   assert.ok(text.includes('CAVEMAN'));
   assert.ok(text.includes('PONYTAIL'));
+  assert.ok(text.includes('ADHD'));
+  assert.ok(text.includes('ANTI-SLOP'));
   assert.ok(text.includes('27k'));
 });
 

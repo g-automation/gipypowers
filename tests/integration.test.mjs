@@ -47,7 +47,7 @@ test('no @-path force-loads in any skill body', () => {
   }
 });
 
-test('full SessionStart payload contains all three layers', () => {
+test('full SessionStart payload contains all automatic layers', () => {
   const out = execFileSync(
     'node',
     [join(ROOT, 'hooks/gipypowers-activate.js')],
@@ -64,6 +64,10 @@ test('full SessionStart payload contains all three layers', () => {
   for (const m of [
     'CAVEMAN',
     'PONYTAIL',
+    'I-HAVE-ADHD',
+    'NO-AI-SLOP',
+    'action first',
+    'preserve intent',
     'invoke',
     'human partner',
     '27k',

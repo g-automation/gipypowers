@@ -4,12 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`gipypowers` is the canonical gipyware plugin — a single install giving a coding agent three layers:
+`gipypowers` is the canonical gipyware plugin — a single install giving a coding agent five automatic layers:
 
 - **Caveman** (terse output) and **Ponytail** (YAGNI/smallest-diff) — always-on, injected via a `SessionStart` hook.
-- **Superpowers** (brainstorming/planning/TDD/debugging/review) — 14 skills under `skills/`, loaded on demand.
+- **i-have-adhd** (action-first, scannable output) and **no-ai-slop** (concrete, direct writing) — always-on, injected via the same hook.
+- **Superpowers** (brainstorming/planning/TDD/debugging/review) — 14 skills under `skills/`, loaded on demand; only this layer is user-selected.
 
-It's a derivative/combination of three separate upstream MIT projects (caveman, ponytail, superpowers — see NOTICE), tuned for a ~10%-of-context (27k token) budget per subagent spawn. This repo is the _compiler/consumer_ of those three projects, not one of the upstreams itself — it has its own remote (`g-automation/gipypowers`).
+It's a derivative/combination of five separate upstream MIT projects (caveman, ponytail, i-have-adhd, no-ai-slop, superpowers — see NOTICE), tuned for a ~10%-of-context (27k token) budget per subagent spawn. This repo is the _compiler/consumer_ of those projects, not one of the upstreams itself — it has its own remote (`g-automation/gipypowers`).
 
 Two parallel harness manifests describe the same plugin and **must be kept in sync** when hook or skill wiring changes:
 
