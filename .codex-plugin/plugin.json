@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
   "version": "0.2.0",
-  "description": "Canonical gipyware plugin: always-on Caveman, Ponytail, i-have-adhd, and no-ai-slop layers plus the on-demand Superpowers workflow.",
+  "description": "Canonical gipyware plugin: automatic Caveman, Ponytail, i-have-adhd, no-ai-slop, and contextual helper capabilities plus on-demand Superpowers.",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
   "keywords": [
@@ -16,8 +16,8 @@
   "hooks": "./hooks/hooks-codex.json",
   "interface": {
     "displayName": "gipypowers",
-    "shortDescription": "Action-first, anti-slop, terse output + lazy-minimal engineering workflows",
-    "longDescription": "Always-on Caveman, Ponytail, i-have-adhd, and no-ai-slop layers plus the on-demand Superpowers workflow — brainstorming, planning, TDD, debugging, review — tuned for Codex and a 10% context budget.",
+    "shortDescription": "Automatic action-first, anti-slop output + minimal engineering workflows",
+    "longDescription": "Automatic Caveman, Ponytail, i-have-adhd, no-ai-slop, and contextual helper capabilities plus the on-demand Superpowers workflow — brainstorming, planning, TDD, debugging, review — tuned for Claude and Codex with a 10% context budget.",
     "developerName": "gipyware",
     "category": "Developer Tools",
     "capabilities": [

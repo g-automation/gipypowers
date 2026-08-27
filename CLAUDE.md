@@ -19,7 +19,7 @@ Two parallel harness manifests describe the same plugin and **must be kept in sy
 
 ## Testing
 
-- Run all tests: `npm test` (`node --test tests/*.test.mjs`) — 24 tests, ~650ms, no framework beyond Node's built-in `node:test`.
+- Run all tests: `npm test` (`node --test tests/*.test.mjs`) — no framework beyond Node's built-in `node:test`.
 - Run a single file: `node --test tests/<name>.test.mjs`.
 - Tests are content-invariant guards — they read the actual markdown/JSON/JS source and assert on substrings/word counts (e.g. session-start payload stays under ~2500 words, every skill has both `SKILL.md` and `agents/openai.yaml`). Treat test failures here as "the content drifted from a guaranteed shape," not flaky tests.
 - Lint: `npm run lint` (ESLint, flat config in `eslint.config.js`). Catch blocks that silently ignore an error (`catch (e) {}` / `catch (_) {}`) are this repo's deliberate convention, not lint violations — the config allows them intentionally.
@@ -30,6 +30,6 @@ Two parallel harness manifests describe the same plugin and **must be kept in sy
 - **`hooks/package.json` pins `"type": "commonjs"` deliberately** — do not convert hook scripts to ESM.
 - **Every skill needs `SKILL.md` + `agents/openai.yaml`** (Codex-facing display metadata) at minimum — a test enforces this across all skills under `skills/`.
 - **Hook scripts branch on env vars to stay platform-agnostic** (`CLAUDE_PLUGIN_ROOT` vs `PLUGIN_ROOT`/`CURSOR_PLUGIN_ROOT`/`COPILOT_CLI`) — preserve this when editing `hooks/*.js`.
-- **NOTICE attributes each derived layer to its upstream author** (caveman → Julius Brussee, ponytail → Dietrich Gebert, superpowers → Jesse Vincent/obra). Update it if new content is adapted from one of those projects.
+- **NOTICE attributes each derived layer to its upstream author** (caveman → Julius Brussee, ponytail → Dietrich Gebert, i-have-adhd → Ayghri, no-ai-slop → Peter Yang, superpowers → Jesse Vincent/obra). Update it if new content is adapted from one of those projects.
 - **`.superpowers/` is gitignored** — it holds a local SDD scratch ledger for this repo's own build-out, not distributed with the plugin.
 - This repo is a sibling of `caveman/`, `ponytail/`, `superpowers/` under `plugins/`, but see `../CLAUDE.md` — those are separate upstream clones with their own git repos; never cross-commit between them and this one.

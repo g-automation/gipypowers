@@ -5,11 +5,15 @@ This product combines and adapts five MIT-licensed projects:
 
 - caveman — Copyright (c) Julius Brussee — https://github.com/JuliusBrussee/caveman
   The always-on "how you talk" (terse output) layer is derived from caveman's
-  skills/caveman/SKILL.md (full intensity level).
+  skills/caveman/SKILL.md (full intensity level), with contextual helper
+  behavior adapted from caveman-review, caveman-commit, cavecrew,
+  caveman-help, caveman-compress, and caveman-stats.
 
 - ponytail — Copyright (c) Dietrich Gebert — https://github.com/DietrichGebert/ponytail
   The always-on "what you build" (YAGNI / minimal code) layer is derived from
-  ponytail's skills/ponytail/SKILL.md (full intensity level).
+  ponytail's skills/ponytail/SKILL.md (full intensity level), with contextual
+  helper behavior adapted from ponytail-review, ponytail-audit, ponytail-debt,
+  ponytail-gain, and ponytail-help.
 
 - superpowers — Copyright (c) Jesse Vincent (obra) — https://github.com/obra/superpowers
   The skill workflow (skills/*) is a compressed adaptation of superpowers 6.1.1.

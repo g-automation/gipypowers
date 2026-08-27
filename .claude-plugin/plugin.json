@@ -1,6 +1,6 @@
 {
   "name": "gipypowers",
-  "description": "Canonical gipyware plugin: always-on terse, ADHD-friendly, anti-slop output + lazy-minimal engineering + the on-demand superpowers workflow.",
+  "description": "Canonical gipyware plugin: automatic terse, ADHD-friendly, anti-slop output, contextual engineering helpers, and on-demand superpowers.",
   "version": "0.2.0",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
