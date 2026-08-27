@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
   "version": "0.2.0",
-  "description": "Canonical gipyware plugin: always-on caveman + ponytail plus the superpowers skill workflow, tuned for Codex (gpt-5.x) and token efficiency.",
+  "description": "Canonical gipyware plugin: always-on Caveman, Ponytail, i-have-adhd, and no-ai-slop layers plus the on-demand Superpowers workflow.",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
   "keywords": [
@@ -16,8 +16,8 @@
   "hooks": "./hooks/hooks-codex.json",
   "interface": {
     "displayName": "gipypowers",
-    "shortDescription": "Terse, lazy-minimal engineering + planning/TDD/debugging workflows",
-    "longDescription": "Always-on caveman (terse output) and ponytail (YAGNI, stdlib-first, smallest correct diff) plus the superpowers skill workflow — brainstorming, planning, TDD, debugging, review — tuned for Codex and a 10% context budget.",
+    "shortDescription": "Action-first, anti-slop, terse output + lazy-minimal engineering workflows",
+    "longDescription": "Always-on Caveman, Ponytail, i-have-adhd, and no-ai-slop layers plus the on-demand Superpowers workflow — brainstorming, planning, TDD, debugging, review — tuned for Codex and a 10% context budget.",
     "developerName": "gipyware",
     "category": "Developer Tools",
     "capabilities": [
