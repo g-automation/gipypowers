@@ -9,10 +9,14 @@ description: Use when the user asks to check for, or install, a gipypowers updat
 
 gipypowers ships from `github.com/g-automation/gipypowers`. This skill finds
 out whether a newer release exists and, if so, does (or tells you) the right
-thing for how *this* copy was installed — a plain git checkout (Codex, manual
+thing for how _this_ copy was installed — a plain git checkout (Codex, manual
 clone) has no host managing it, so `git pull` is safe and sufficient. A
 Claude Code marketplace install lives in a host-managed cache directory with
 no `.git` — never write into that directory directly; Claude Code owns it.
+
+The passive SessionStart check uses the same endpoint and honors
+`GIPYPOWERS_UPDATE_URL` for a compatible mirror. It only reports newer
+versions; installation remains an explicit, host-appropriate action.
 
 **Announce at start:** "I'm using the check-for-updates skill to check for a gipypowers update."
 

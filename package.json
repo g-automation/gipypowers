@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
-  "version": "0.2.0",
-  "description": "Canonical gipyware plugin: always-on caveman + ponytail plus the superpowers skill workflow, tuned for Codex and token efficiency.",
+  "version": "0.3.0",
+  "description": "Canonical gipyware plugin: automatic concise, action-first, anti-slop output and engineering helpers plus on-demand Superpowers for Claude and Codex.",
   "license": "MIT",
   "scripts": {
     "test": "node --test tests/*.test.mjs",

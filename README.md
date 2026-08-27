@@ -1,43 +1,42 @@
 # gipypowers
 
-The canonical gipyware plugin. One install gives a coding agent five automatic layers:
+gipypowers is a cross-host Claude Code/Codex plugin that combines concise communication with disciplined engineering. Install once; the non-Superpowers layers activate automatically on every session.
 
-- **Caveman** — terse output (drop filler, keep every technical fact). Native, always on, cannot be disabled by user request.
-- **Ponytail** — YAGNI, stdlib-first, smallest correct diff, clean-code/performance never traded away. Native, always on, cannot be disabled by user request.
-- **i-have-adhd** — action-first, scannable responses with visible state and concrete next steps. Native, always on, cannot be disabled by user request.
-- **no-ai-slop** — concrete, direct writing that preserves intent and removes generic AI phrasing. Native, always on, cannot be disabled by user request.
-- **Automatic helpers** — contextual review, commit, compression, help, stats, audit, debt, and gain guidance from Caveman/Ponytail. Native, always on; metrics and full help remain on request.
-- **Superpowers** — brainstorming, planning, TDD, debugging, and review skills, loaded on demand. Checking for a matching skill is itself mandatory; which specific skill applies is task-driven.
+## What Runs Automatically
 
-Tuned for OpenAI Codex (gpt-5.6 / 5.5 / 5.4) and a 10%-of-context token budget; also installs in Claude Code.
+- **Caveman:** terse, high-signal responses; no filler or lexical commentary.
+- **Ponytail:** YAGNI, standard-library-first choices, smallest safe diff, and performance/safety guardrails.
+- **i-have-adhd:** action-first, scannable output with visible state and next steps.
+- **no-ai-slop:** concrete, direct language that removes generic AI phrasing.
+- **Helpers:** contextual review, commit-message, compression, help, stats, audit, debt, and gain guidance. Metrics and full help run only when requested.
+
+These layers execute together and cannot be disabled by a user request. The indexed source of truth is `rules/automatic-capabilities.json`.
+
+## Superpowers Workflow
+
+Superpowers is the only user-selected layer. When a task matches, the bootstrap requires the relevant skill: brainstorming, writing plans, TDD, systematic debugging, worktrees, parallel/subagent development, code review, and verification. Subagents receive the same concise reminders and the literal `27k` context-budget rule.
 
 ## Install
 
-- **Codex:** add this plugin directory; `.codex-plugin/plugin.json` registers the skills and the SessionStart hook.
-- **Claude Code:** add via the marketplace entry in `.claude-plugin/marketplace.json`, or point Claude Code at this directory.
+- **Claude Code:** add the marketplace entry in `.claude-plugin/marketplace.json`, then install or refresh `gipypowers` from `/plugin`.
+- **Codex:** install this repository as a plugin; `.codex-plugin/plugin.json` registers `skills/` and `hooks/hooks-codex.json`.
+- **Local development:** `npm install` installs lint/test tools.
 
-## How it works
+Both hosts load the same capabilities; only the hook envelope differs.
 
-A single `SessionStart` hook injects the indexed automatic capabilities and the compact `using-superpowers` bootstrap. Superpowers skills load only when invoked, so the always-on cost stays under ~2,500 tokens. A `SubagentStart` hook re-injects compact reminders and the 27k-token budget so subagents stay action-oriented, concise, and in budget.
+## Updates
 
-## Updating
+SessionStart checks GitHub at most once per 24 hours, with a 1.5-second timeout and silent failure. A newer release produces an actionable notice—never a silent file mutation. Set `GIPYPOWERS_NO_UPDATE_CHECK=1` to opt out, or `GIPYPOWERS_UPDATE_URL` to point at a compatible `package.json` mirror.
 
-A `SessionStart` hook checks GitHub once every 24h (best-effort, silent on
-failure, bounded to ~1.5s) and adds one line to the injected context if a
-newer release exists. Set `GIPYPOWERS_NO_UPDATE_CHECK=1` to disable this
-check entirely.
+- Git checkout (Codex/manual): run `git -C "$PLUGIN_ROOT" pull` after reviewing a clean worktree.
+- Claude marketplace cache: open `/plugin`, refresh the marketplace, and update there; never edit the cache directly.
 
-To actually update:
+Ask the agent to use `check-for-updates` for detection and the correct host-specific command.
 
-- **Codex / manual clone:** the plugin directory is a normal git checkout —
-  `cd` into it and `git pull`.
-- **Claude Code marketplace install:** open `/plugin`, refresh the
-  `gipypowers` marketplace entry, then update the plugin from there — Claude
-  Code fetches the new version into its own cache directory.
+## Development
 
-Or ask the agent to run the `check-for-updates` skill, which detects which
-of the two situations applies and does (or tells you) the right thing.
+`npm test` runs all Node tests; `npm run lint` checks hooks; `git diff --check` catches whitespace errors. Keep manifests synchronized and update `NOTICE` when adapting upstream MIT work.
 
 ## Credits
 
-Combines and adapts caveman (JuliusBrussee), ponytail (DietrichGebert), i-have-adhd (Ayghri), no-ai-slop (Peter Yang), and superpowers (obra) — all MIT. See `NOTICE`.
+Adapted from caveman, ponytail, i-have-adhd, no-ai-slop, and superpowers. See `NOTICE` for attribution and licenses.

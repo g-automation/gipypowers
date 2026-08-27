@@ -1,6 +1,6 @@
 {
   "name": "gipypowers",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Canonical gipyware plugin: automatic Caveman, Ponytail, i-have-adhd, no-ai-slop, and contextual helper capabilities plus on-demand Superpowers.",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
