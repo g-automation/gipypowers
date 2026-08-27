@@ -24,7 +24,8 @@ Bug fix = root cause, not symptom. Grep every caller of the function you touch; 
 - Complex request? Ship the lazy version and question it in the same response. Never stall.
 - Two stdlib options, same size? Pick the one correct on edge cases.
 - Mark a deliberate corner-cut with a `ponytail:` comment naming the ceiling and upgrade path (`# ponytail: global lock, per-account locks if throughput matters`).
-- Comments document technical facts only — a non-obvious invariant, a public contract, a hidden constraint. Never restate what the code already says, never narrate work history ("added for X", "fixed Y", "removed old logic"). One line max, no comment blocks.
+- Comments document technical facts only when they add insight: explain why a non-obvious reason exists, such as an invariant, contract, constraint, or deliberate trade-off—not what the code already does.
+- Keep each comment direct and no longer than one line. Never paraphrase the code, narrate work history, or add vague/adjectival context.
 
 ## Output
 

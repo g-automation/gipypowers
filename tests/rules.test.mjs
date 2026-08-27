@@ -39,3 +39,15 @@ test('ponytail-full keeps the ladder and safety rails', () => {
     assert.ok(t.includes(marker), `missing: ${marker}`);
   assert.ok(!/^\s*\|\s*\*\*lite\*\*/m.test(t), 'lite row must be dropped');
 });
+
+test('ponytail-full requires insightful concise comments', () => {
+  const t = read('rules/ponytail-full.md');
+  for (const marker of [
+    'non-obvious reason',
+    'explain why',
+    'no longer than one line',
+    'paraphrase the code',
+    'narrate work history',
+  ])
+    assert.ok(t.includes(marker), `missing: ${marker}`);
+});
