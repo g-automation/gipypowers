@@ -26,6 +26,15 @@ test('codex manifest declares skills + a REAL hook path (not {})', () => {
   assert.equal(m.interface.displayName, 'gipypowers');
 });
 
+test('Claude and Codex manifests publish the same release version', () => {
+  const claude = j('.claude-plugin/plugin.json');
+  const codex = j('.codex-plugin/plugin.json');
+  const packageJson = j('package.json');
+  assert.equal(claude.version, packageJson.version);
+  assert.equal(codex.version, packageJson.version);
+  assert.equal(claude.name, codex.name);
+});
+
 test('marketplace lists the gipypowers plugin', () => {
   const m = j('.claude-plugin/marketplace.json');
   assert.equal(m.plugins[0].name, 'gipypowers');

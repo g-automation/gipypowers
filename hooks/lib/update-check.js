@@ -9,7 +9,7 @@ const CACHE_DIR = path.join(os.homedir(), '.gipypowers');
 const CACHE_FILE = path.join(CACHE_DIR, 'update-check.json');
 const THROTTLE_MS = 24 * 60 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 1500;
-const REMOTE_URL =
+const DEFAULT_REMOTE_URL =
   'https://raw.githubusercontent.com/g-automation/gipypowers/main/package.json';
 
 function parseVersion(v) {
@@ -30,6 +30,10 @@ function isNewerVersion(remote, local) {
     if (r[i] < l[i]) return false;
   }
   return false;
+}
+
+function remoteUrl() {
+  return process.env.GIPYPOWERS_UPDATE_URL || DEFAULT_REMOTE_URL;
 }
 
 function readCache() {
@@ -60,16 +64,22 @@ function fetchRemoteVersion() {
     let req;
     try {
       req = https.get(
-        REMOTE_URL,
+        remoteUrl(),
         { headers: { 'User-Agent': 'gipypowers-update-check' } },
         (res) => {
           let body = '';
+          if (res.statusCode !== 200) {
+            res.resume();
+            finish(null);
+            return;
+          }
           res.on('data', (chunk) => {
             body += chunk;
           });
           res.on('end', () => {
             try {
-              finish(JSON.parse(body).version || null);
+              const version = JSON.parse(body).version;
+              finish(parseVersion(version) ? version : null);
             } catch (_) {
               finish(null);
             }
@@ -89,9 +99,8 @@ function fetchRemoteVersion() {
 
 function readLocalVersion(root) {
   try {
-    return JSON.parse(
-      fs.readFileSync(path.join(root, 'package.json'), 'utf8'),
-    ).version;
+    return JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
+      .version;
   } catch (_) {
     return null;
   }
@@ -126,3 +135,5 @@ async function getUpdateNotice(root) {
 
 module.exports.isNewerVersion = isNewerVersion;
 module.exports.getUpdateNotice = getUpdateNotice;
+module.exports.parseVersion = parseVersion;
+module.exports.DEFAULT_REMOTE_URL = DEFAULT_REMOTE_URL;

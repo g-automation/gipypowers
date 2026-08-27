@@ -4,8 +4,12 @@
 try {
   const env = process.env;
   const reminder =
-    'gipypowers active (subagent). CAVEMAN: terse output, drop filler, code/errors verbatim. ' +
+    'gipypowers active (subagent). AUTO-CAPABILITIES: all non-Superpowers helpers are active; do not invoke them as skills. ' +
+    'CAVEMAN: terse output, drop filler, code/errors verbatim. ' +
     'PONYTAIL: YAGNI, stdlib first, smallest correct diff; never simplify away validation, security, or tests. ' +
+    'ADHD: action first, number real multi-step work, show state/progress, cap lists at 5. ' +
+    'ANTI-SLOP: preserve intent, use concrete active language, cut filler and AI patterns. ' +
+    'Superpowers skills remain user-selected. ' +
     'BUDGET: keep your working context under ~27k tokens (10% of the window); persist bulk output to files, keep only pointers.';
   let out;
   if (env.CURSOR_PLUGIN_ROOT) {

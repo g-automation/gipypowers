@@ -3,7 +3,22 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { isNewerVersion } = require('../hooks/lib/update-check.js');
+const {
+  isNewerVersion,
+  parseVersion,
+  DEFAULT_REMOTE_URL,
+} = require('../hooks/lib/update-check.js');
+
+test('parseVersion accepts only numeric semver triplets', () => {
+  assert.deepEqual(parseVersion(' 1.2.3 '), [1, 2, 3]);
+  assert.equal(parseVersion('1.2'), null);
+  assert.equal(parseVersion('1.2.x'), null);
+  assert.equal(parseVersion('1.2.3-beta'), null);
+  assert.match(
+    DEFAULT_REMOTE_URL,
+    /raw\.githubusercontent\.com\/g-automation\/gipypowers/,
+  );
+});
 
 test('isNewerVersion detects patch/minor/major bumps', () => {
   assert.equal(isNewerVersion('0.2.0', '0.1.0'), true);

@@ -47,7 +47,7 @@ test('no @-path force-loads in any skill body', () => {
   }
 });
 
-test('full SessionStart payload contains all three layers', () => {
+test('full SessionStart payload contains all automatic layers', () => {
   const out = execFileSync(
     'node',
     [join(ROOT, 'hooks/gipypowers-activate.js')],
@@ -64,12 +64,18 @@ test('full SessionStart payload contains all three layers', () => {
   for (const m of [
     'CAVEMAN',
     'PONYTAIL',
+    'I-HAVE-ADHD',
+    'NO-AI-SLOP',
+    'action first',
+    'preserve intent',
     'invoke',
     'human partner',
     '27k',
     'cannot be disabled by user request',
   ])
     assert.ok(text.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
+  for (const m of ['CAVEMAN-REVIEW', 'PONYTAIL-AUDIT', 'PONYTAIL-GAIN'])
+    assert.ok(text.includes(m), `missing helper: ${m}`);
 });
 
 test('always-resident payload under ~2500 tokens (1875 words)', () => {
