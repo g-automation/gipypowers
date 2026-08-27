@@ -14,7 +14,7 @@ These layers execute together and cannot be disabled by a user request. The inde
 
 ## Superpowers Workflow
 
-Superpowers is the only user-selected layer. When a task matches, the bootstrap requires the relevant skill: brainstorming, writing plans, TDD, systematic debugging, worktrees, parallel/subagent development, code review, and verification. Subagents receive the same concise reminders and the literal `27k` context-budget rule.
+Superpowers is the only user-selected layer. When a task matches, the bootstrap requires the relevant skill: brainstorming, writing/executing plans, TDD, systematic debugging, worktrees, parallel/subagent development, requesting/receiving review, verification, finishing branches, writing skills, and update checks. Subagents receive the same concise reminders and the literal `27k` context-budget rule.
 
 ## Install
 
