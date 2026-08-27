@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-// gipypowers SessionStart hook — injects the five always-on layers.
+// gipypowers SessionStart hook — injects automatic capabilities + Superpowers.
 const fs = require('fs');
 const path = require('path');
 const { getUpdateNotice } = require('./lib/update-check');
@@ -19,26 +19,50 @@ function stripFrontmatter(md) {
   return md.replace(/^---\n[\s\S]*?\n---\n?/, '').trim();
 }
 
+function loadAutomaticCapabilities() {
+  let entries;
+  try {
+    entries = JSON.parse(read('rules/automatic-capabilities.json'));
+  } catch (_) {
+    return '';
+  }
+  if (!Array.isArray(entries)) return '';
+
+  const valid = entries
+    .filter(
+      (entry) =>
+        entry &&
+        typeof entry.file === 'string' &&
+        typeof entry.marker === 'string' &&
+        typeof entry.priority === 'number',
+    )
+    .sort((a, b) => a.priority - b.priority);
+  const groups = new Map();
+  for (const entry of valid) {
+    if (!groups.has(entry.file)) groups.set(entry.file, []);
+    groups.get(entry.file).push(entry.marker);
+  }
+
+  const sections = [];
+  for (const [file, markers] of groups) {
+    const body = read(file);
+    if (!body) continue;
+    sections.push(`## ${markers.join(' / ')}\n${body}`);
+  }
+  return sections.join('\n\n');
+}
+
 (async () => {
   try {
-    const caveman = read('rules/caveman-full.md');
-    const ponytail = read('rules/ponytail-full.md');
-    const adhd = read('rules/i-have-adhd-full.md');
-    const noAiSlop = read('rules/no-ai-slop-full.md');
+    const automaticCapabilities = loadAutomaticCapabilities();
     const bootstrap = stripFrontmatter(
       read('skills/using-superpowers/SKILL.md'),
     );
 
     let payload = `<EXTREMELY_IMPORTANT>
-You have gipypowers — five layers, all mandatory. CAVEMAN, PONYTAIL, I-HAVE-ADHD, and NO-AI-SLOP are NATIVE, always active, and cannot be disabled by user request: never invoke them as skills, never ask to enable or disable them. SUPERPOWERS: checking for and invoking a matching skill is itself mandatory and non-optional; only which specific skill applies is task-driven.
+You have gipypowers — automatic non-Superpowers capabilities are active and cannot be disabled by user request. Never invoke Caveman, Ponytail, ADHD, No-AI-Slop, or their helper capabilities as skills. Superpowers remains user-selected: checking for and invoking a matching Superpowers skill is mandatory when task-driven; only which specific skill applies is user-selected.
 
-${caveman}
-
-${ponytail}
-
-${adhd}
-
-${noAiSlop}
+${automaticCapabilities}
 
 ## SUPERPOWERS — your workflow skills
 ${bootstrap}

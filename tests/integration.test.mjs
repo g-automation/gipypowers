@@ -74,6 +74,8 @@ test('full SessionStart payload contains all automatic layers', () => {
     'cannot be disabled by user request',
   ])
     assert.ok(text.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
+  for (const m of ['CAVEMAN-REVIEW', 'PONYTAIL-AUDIT', 'PONYTAIL-GAIN'])
+    assert.ok(text.includes(m), `missing helper: ${m}`);
 });
 
 test('always-resident payload under ~2500 tokens (1875 words)', () => {

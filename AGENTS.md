@@ -5,8 +5,10 @@
 `skills/` contains each distributable workflow, with its `SKILL.md`, optional
 scripts/references, and required `agents/openai.yaml` metadata. `hooks/` holds
 CommonJS lifecycle hooks plus Claude and Codex hook manifests. `rules/` contains
-the always-on Caveman, Ponytail, i-have-adhd, and no-ai-slop instructions. Tests
-live in `tests/` as Node test files; design notes and plans belong in
+the always-on Caveman, Ponytail, i-have-adhd, no-ai-slop, and contextual helper
+instructions. `rules/automatic-capabilities.json` is source of truth for
+automatic capability order. Tests live in `tests/` as Node test files; design
+notes and plans belong in
 `docs/superpowers/`.
 
 Keep `.claude-plugin/plugin.json` with `hooks/hooks.json`, and

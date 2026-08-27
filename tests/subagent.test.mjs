@@ -18,6 +18,8 @@ test('subagent hook emits valid JSON with the reminder', () => {
   assert.ok(text.includes('PONYTAIL'));
   assert.ok(text.includes('ADHD'));
   assert.ok(text.includes('ANTI-SLOP'));
+  assert.ok(text.includes('AUTO-CAPABILITIES'));
+  assert.ok(text.includes('Superpowers skills remain user-selected'));
   assert.ok(text.includes('27k'));
 });
 

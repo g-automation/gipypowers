@@ -6,6 +6,7 @@ import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
+const readJson = (p) => JSON.parse(read(p));
 
 test('caveman-full keeps its load-bearing rules', () => {
   const t = read('rules/caveman-full.md');
@@ -71,4 +72,34 @@ test('automatic output layers contain action and anti-slop guidance', () => {
       slop.toLowerCase().includes(marker.toLowerCase()),
       `missing anti-slop marker: ${marker}`,
     );
+});
+
+test('automatic capability index is complete and typed', () => {
+  const entries = readJson('rules/automatic-capabilities.json');
+  const expected = [
+    'i-have-adhd',
+    'no-ai-slop',
+    'caveman',
+    'caveman-review',
+    'caveman-commit',
+    'caveman-compress',
+    'caveman-help',
+    'caveman-stats',
+    'ponytail',
+    'ponytail-review',
+    'ponytail-audit',
+    'ponytail-debt',
+    'ponytail-gain',
+    'ponytail-help',
+  ];
+  assert.deepEqual(
+    entries.map((entry) => entry.name),
+    expected,
+    'capabilities must stay in declared precedence order',
+  );
+  for (const entry of entries) {
+    assert.equal(typeof entry.file, 'string', `${entry.name}: file`);
+    assert.equal(typeof entry.marker, 'string', `${entry.name}: marker`);
+    assert.equal(typeof entry.priority, 'number', `${entry.name}: priority`);
+  }
 });
