@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-// gipypowers SessionStart hook — injects the three always-on layers.
+// gipypowers SessionStart hook — injects the five always-on layers.
 const fs = require('fs');
 const path = require('path');
 const { getUpdateNotice } = require('./lib/update-check');
@@ -23,16 +23,22 @@ function stripFrontmatter(md) {
   try {
     const caveman = read('rules/caveman-full.md');
     const ponytail = read('rules/ponytail-full.md');
+    const adhd = read('rules/i-have-adhd-full.md');
+    const noAiSlop = read('rules/no-ai-slop-full.md');
     const bootstrap = stripFrontmatter(
       read('skills/using-superpowers/SKILL.md'),
     );
 
     let payload = `<EXTREMELY_IMPORTANT>
-You have gipypowers — three layers, all mandatory. CAVEMAN and PONYTAIL are NATIVE, always active, and cannot be disabled by user request: never invoke them as skills, never ask to enable or disable them. SUPERPOWERS: checking for and invoking a matching skill is itself mandatory and non-optional; only which specific skill applies is task-driven.
+You have gipypowers — five layers, all mandatory. CAVEMAN, PONYTAIL, I-HAVE-ADHD, and NO-AI-SLOP are NATIVE, always active, and cannot be disabled by user request: never invoke them as skills, never ask to enable or disable them. SUPERPOWERS: checking for and invoking a matching skill is itself mandatory and non-optional; only which specific skill applies is task-driven.
 
 ${caveman}
 
 ${ponytail}
+
+${adhd}
+
+${noAiSlop}
 
 ## SUPERPOWERS — your workflow skills
 ${bootstrap}

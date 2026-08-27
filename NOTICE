@@ -1,7 +1,7 @@
 gipypowers
 Copyright (c) 2026 gipyware
 
-This product combines and adapts three MIT-licensed projects:
+This product combines and adapts five MIT-licensed projects:
 
 - caveman — Copyright (c) Julius Brussee — https://github.com/JuliusBrussee/caveman
   The always-on "how you talk" (terse output) layer is derived from caveman's
@@ -13,6 +13,12 @@ This product combines and adapts three MIT-licensed projects:
 
 - superpowers — Copyright (c) Jesse Vincent (obra) — https://github.com/obra/superpowers
   The skill workflow (skills/*) is a compressed adaptation of superpowers 6.1.1.
+
+- i-have-adhd — Copyright (c) Ayghri — https://github.com/ayghri/i-have-adhd
+  The always-on action-first output layer is adapted from its i-have-adhd skill.
+
+- no-ai-slop — Copyright (c) Peter Yang — https://github.com/petergyang/no-ai-slop
+  The always-on concrete, direct writing layer is adapted from its no-ai-slop skill.
 
 Each project is MIT-licensed; their permission notices are reproduced under
 their respective source repositories. This adaptation is itself MIT-licensed.
