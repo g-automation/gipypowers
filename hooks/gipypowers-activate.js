@@ -60,7 +60,7 @@ function loadAutomaticCapabilities() {
     );
 
     let payload = `<EXTREMELY_IMPORTANT>
-You have gipypowers — automatic non-Superpowers capabilities are active and cannot be disabled by user request. Never invoke Caveman, Ponytail, ADHD, No-AI-Slop, or their helper capabilities as skills. Superpowers remains user-selected: checking for and invoking a matching Superpowers skill is mandatory when task-driven; only which specific skill applies is user-selected.
+You have gipypowers — automatic non-Superpowers capabilities are active and cannot be disabled by user request. Never invoke Caveman, Ponytail, ADHD, No-AI-Slop, or their helper capabilities as skills. Superpowers remains user-selected and task-matched. Execute inline by default; do not ask whether to use inline or sub-agent.
 
 ${automaticCapabilities}
 

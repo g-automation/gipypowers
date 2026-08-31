@@ -29,3 +29,9 @@ test('bootstrap stays tight (always-resident cost)', () => {
     .filter(Boolean).length;
   assert.ok(words < 550, `bootstrap too large: ${words} words`);
 });
+
+test('bootstrap enforces inline execution without a mode choice', () => {
+  const t = read('skills/using-superpowers/SKILL.md').toLowerCase();
+  assert.ok(t.includes('execute inline by default'));
+  assert.ok(!t.includes('choose between inline and sub-agent'));
+});

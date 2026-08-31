@@ -10,6 +10,7 @@ try {
     'ADHD: action first, number real multi-step work, show state/progress, cap lists at 5. ' +
     'ANTI-SLOP: preserve intent, use concrete active language, cut filler and AI patterns. ' +
     'Superpowers skills remain user-selected. ' +
+    'INLINE: continue inline unless user explicitly invokes a sub-agent skill. ' +
     'BUDGET: keep your working context under ~27k tokens (10% of the window); persist bulk output to files, keep only pointers.';
   let out;
   if (env.CURSOR_PLUGIN_ROOT) {

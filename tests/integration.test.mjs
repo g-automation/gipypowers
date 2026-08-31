@@ -72,10 +72,46 @@ test('full SessionStart payload contains all automatic layers', () => {
     'human partner',
     '27k',
     'cannot be disabled by user request',
+    'execute inline by default',
   ])
     assert.ok(text.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
   for (const m of ['CAVEMAN-REVIEW', 'PONYTAIL-AUDIT', 'PONYTAIL-GAIN'])
     assert.ok(text.includes(m), `missing helper: ${m}`);
+});
+
+test('SessionStart payload does not offer inline versus sub-agent choice', () => {
+  const out = execFileSync(
+    'node',
+    [join(ROOT, 'hooks/gipypowers-activate.js')],
+    {
+      env: {
+        ...process.env,
+        CLAUDE_PLUGIN_ROOT: ROOT,
+        GIPYPOWERS_NO_UPDATE_CHECK: '1',
+      },
+      encoding: 'utf8',
+    },
+  );
+  const text =
+    JSON.parse(out).hookSpecificOutput.additionalContext.toLowerCase();
+  assert.ok(text.includes('execute inline by default'));
+  assert.ok(!text.includes('choose between inline and sub-agent'));
+});
+
+test('workflow docs route ordinary work inline', () => {
+  const docs = [
+    'skills/executing-plans/SKILL.md',
+    'skills/writing-plans/SKILL.md',
+    'skills/writing-skills/SKILL.md',
+  ].map((p) => readFileSync(join(ROOT, p), 'utf8').toLowerCase());
+  for (const text of docs) {
+    assert.ok(text.includes('execute inline by default'));
+    assert.match(text, /explicitly invoke/);
+    assert.ok(!text.includes('which approach?'));
+    assert.ok(!text.includes('always use subagents'));
+  }
+  const readme = readFileSync(join(ROOT, 'README.md'), 'utf8').toLowerCase();
+  assert.ok(readme.includes('inline by default'));
 });
 
 test('always-resident payload under ~2500 tokens (1875 words)', () => {
