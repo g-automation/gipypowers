@@ -16,13 +16,15 @@ rules for using the available layers.
 
 ## Priority
 
+Execute inline by default; do not ask whether to use inline or sub-agent.
+
 Use process skills first, then implementation skills:
 
 - Creative or behavior change: `brainstorming` first.
 - Feature or bugfix: `test-driven-development` before code; use
   `systematic-debugging` for failures or unexpected behavior.
 - Written requirements: `writing-plans` before implementation.
-- Plan execution: `executing-plans` or `subagent-driven-development`.
+- Plan execution: `executing-plans` inline; use sub-agent skills only when explicitly invoked.
 - Completion claim: `verification-before-completion` first.
 - Review feedback: `receiving-code-review`; requesting review:
   `requesting-code-review`.

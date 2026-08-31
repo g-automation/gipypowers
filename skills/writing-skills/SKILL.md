@@ -168,7 +168,7 @@ Use words an agent would search for: error messages ("Hook timed out", "ENOTEMPT
 
 Move details to tool help — reference `--help` instead of documenting every flag in SKILL.md.
 
-Use cross-references instead of repeating workflow details: "Always use subagents (50-100x context savings). REQUIRED: Use [other-skill-name] for workflow." — don't repeat 20 lines of instructions already in another skill.
+Use cross-references instead of repeating workflow details: "Execute inline by default. Use sub-agent workflows only when explicitly invoked." — don't repeat 20 lines of instructions already in another skill.
 
 Compress examples — one minimal example beats a verbose one:
 

@@ -21,6 +21,11 @@ test('subagent hook emits valid JSON with the reminder', () => {
   assert.ok(text.includes('AUTO-CAPABILITIES'));
   assert.ok(text.includes('Superpowers skills remain user-selected'));
   assert.ok(text.includes('27k'));
+  assert.ok(
+    text.includes(
+      'continue inline unless user explicitly invokes a sub-agent skill',
+    ),
+  );
 });
 
 test('subagent hook uses top-level field for Codex/SDK', () => {
