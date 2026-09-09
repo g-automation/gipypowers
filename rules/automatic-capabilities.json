@@ -1,16 +1,86 @@
 [
-  {"name":"i-have-adhd","file":"rules/i-have-adhd-full.md","marker":"I-HAVE-ADHD","priority":10},
-  {"name":"no-ai-slop","file":"rules/no-ai-slop-full.md","marker":"NO-AI-SLOP","priority":20},
-  {"name":"caveman","file":"rules/caveman-full.md","marker":"CAVEMAN","priority":30},
-  {"name":"caveman-review","file":"rules/caveman-helpers-full.md","marker":"CAVEMAN-REVIEW","priority":40},
-  {"name":"caveman-commit","file":"rules/caveman-helpers-full.md","marker":"CAVEMAN-COMMIT","priority":50},
-  {"name":"caveman-compress","file":"rules/caveman-helpers-full.md","marker":"CAVEMAN-COMPRESS","priority":60},
-  {"name":"caveman-help","file":"rules/caveman-helpers-full.md","marker":"CAVEMAN-HELP","priority":70},
-  {"name":"caveman-stats","file":"rules/caveman-helpers-full.md","marker":"CAVEMAN-STATS","priority":80},
-  {"name":"ponytail","file":"rules/ponytail-full.md","marker":"PONYTAIL","priority":90},
-  {"name":"ponytail-review","file":"rules/ponytail-helpers-full.md","marker":"PONYTAIL-REVIEW","priority":100},
-  {"name":"ponytail-audit","file":"rules/ponytail-helpers-full.md","marker":"PONYTAIL-AUDIT","priority":110},
-  {"name":"ponytail-debt","file":"rules/ponytail-helpers-full.md","marker":"PONYTAIL-DEBT","priority":120},
-  {"name":"ponytail-gain","file":"rules/ponytail-helpers-full.md","marker":"PONYTAIL-GAIN","priority":130},
-  {"name":"ponytail-help","file":"rules/ponytail-helpers-full.md","marker":"PONYTAIL-HELP","priority":140}
+  {
+    "name": "i-have-adhd",
+    "file": "rules/i-have-adhd-full.md",
+    "marker": "I-HAVE-ADHD",
+    "priority": 10
+  },
+  {
+    "name": "no-ai-slop",
+    "file": "rules/no-ai-slop-full.md",
+    "marker": "NO-AI-SLOP",
+    "priority": 20
+  },
+  {
+    "name": "caveman",
+    "file": "rules/caveman-full.md",
+    "marker": "CAVEMAN",
+    "priority": 30
+  },
+  {
+    "name": "caveman-review",
+    "file": "rules/caveman-helpers-full.md",
+    "marker": "CAVEMAN-REVIEW",
+    "priority": 40
+  },
+  {
+    "name": "caveman-commit",
+    "file": "rules/caveman-helpers-full.md",
+    "marker": "CAVEMAN-COMMIT",
+    "priority": 50
+  },
+  {
+    "name": "caveman-compress",
+    "file": "rules/caveman-helpers-full.md",
+    "marker": "CAVEMAN-COMPRESS",
+    "priority": 60
+  },
+  {
+    "name": "caveman-help",
+    "file": "rules/caveman-helpers-full.md",
+    "marker": "CAVEMAN-HELP",
+    "priority": 70
+  },
+  {
+    "name": "caveman-stats",
+    "file": "rules/caveman-helpers-full.md",
+    "marker": "CAVEMAN-STATS",
+    "priority": 80
+  },
+  {
+    "name": "ponytail",
+    "file": "rules/ponytail-full.md",
+    "marker": "PONYTAIL",
+    "priority": 90
+  },
+  {
+    "name": "ponytail-review",
+    "file": "rules/ponytail-helpers-full.md",
+    "marker": "PONYTAIL-REVIEW",
+    "priority": 100
+  },
+  {
+    "name": "ponytail-audit",
+    "file": "rules/ponytail-helpers-full.md",
+    "marker": "PONYTAIL-AUDIT",
+    "priority": 110
+  },
+  {
+    "name": "ponytail-debt",
+    "file": "rules/ponytail-helpers-full.md",
+    "marker": "PONYTAIL-DEBT",
+    "priority": 120
+  },
+  {
+    "name": "ponytail-gain",
+    "file": "rules/ponytail-helpers-full.md",
+    "marker": "PONYTAIL-GAIN",
+    "priority": 130
+  },
+  {
+    "name": "ponytail-help",
+    "file": "rules/ponytail-helpers-full.md",
+    "marker": "PONYTAIL-HELP",
+    "priority": 140
+  }
 ]
