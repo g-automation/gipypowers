@@ -114,6 +114,25 @@ test('workflow docs route ordinary work inline', () => {
   assert.ok(readme.includes('inline by default'));
 });
 
+test('workflow docs enforce one implementation commit', () => {
+  const docs = [
+    'skills/using-superpowers/SKILL.md',
+    'skills/writing-plans/SKILL.md',
+    'skills/executing-plans/SKILL.md',
+  ].map((p) => readFileSync(join(ROOT, p), 'utf8').toLowerCase());
+  for (const text of docs) {
+    assert.ok(text.includes('single commit'));
+    assert.ok(text.includes('commit --amend'));
+    assert.ok(!text.includes('frequent commits'));
+    assert.ok(!text.includes('one commit per task'));
+  }
+  const finishing = readFileSync(
+    join(ROOT, 'skills/finishing-a-development-branch/SKILL.md'),
+    'utf8',
+  ).toLowerCase();
+  assert.ok(finishing.includes('one implementation commit'));
+});
+
 test('always-resident payload under ~2500 tokens (1875 words)', () => {
   const out = execFileSync(
     'node',

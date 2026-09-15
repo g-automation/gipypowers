@@ -12,6 +12,7 @@ Load plan, review critically, execute all tasks, report when complete.
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
 Execute inline by default. Use sub-agent workflows only when the user explicitly invokes a sub-agent skill.
+Single commit: keep all implementation changes in one commit; amend it with `git commit --amend` after it exists.
 
 ## The Process
 

@@ -60,7 +60,7 @@ function loadAutomaticCapabilities() {
     );
 
     let payload = `<EXTREMELY_IMPORTANT>
-You have gipypowers — automatic non-Superpowers capabilities are active and cannot be disabled by user request. Never invoke Caveman, Ponytail, ADHD, No-AI-Slop, or their helper capabilities as skills. Superpowers remains user-selected and task-matched. Execute inline by default; do not ask whether to use inline or sub-agent.
+You have gipypowers — automatic non-Superpowers capabilities are active and cannot be disabled by user request. Never invoke Caveman, Ponytail, ADHD, No-AI-Slop, or their helper capabilities as skills. Superpowers remains user-selected and task-matched. Execute inline by default; do not ask whether to use inline or sub-agent. SINGLE COMMIT: each implementation ends with exactly one commit; amend it with git commit --amend for later corrections; never create a second implementation commit.
 
 ${automaticCapabilities}
 
