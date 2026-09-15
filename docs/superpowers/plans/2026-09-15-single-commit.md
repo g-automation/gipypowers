@@ -14,7 +14,7 @@
 - After the implementation commit exists, corrections use `git commit --amend`.
 - Existing history is not rewritten implicitly.
 - Execute inline by default; sub-agent workflows require explicit invocation.
-- Preserve `0.4.0`, manifests, host-specific hook envelopes, automatic capabilities, and the literal `27k` rule.
+- Bump and synchronize release version to `0.5.0`; preserve host-specific hook envelopes, automatic capabilities, and the literal `27k` rule.
 - This execution produces one commit total; do not create per-task or design-doc commits.
 
 ---

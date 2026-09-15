@@ -32,7 +32,7 @@ history remain outside this automatic policy.
 Existing skills, manifests, host-specific hook envelopes, explicit sub-agent
 invocation, the `27k` budget rule, and automatic capabilities remain available.
 This change only removes multi-commit defaults from the gipypowers workflow.
-Version remains `0.4.0`; this is a behavior correction within the release.
+Release version is bumped to `0.5.0` for this behavior correction.
 
 ## Testing
 

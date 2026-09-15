@@ -11,7 +11,7 @@ test('version matches across package.json and both plugin manifests', () => {
   const pkg = j('package.json');
   const claudeManifest = j('.claude-plugin/plugin.json');
   const codexManifest = j('.codex-plugin/plugin.json');
-  assert.equal(pkg.version, '0.4.0');
+  assert.equal(pkg.version, '0.5.0');
   assert.equal(
     claudeManifest.version,
     pkg.version,
