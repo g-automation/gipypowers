@@ -45,6 +45,7 @@ brainstorming.
 ### B. Passive update notice (`hooks/lib/update-check.js`, new)
 
 Exports:
+
 - `isNewerVersion(remote, local)` — pure `x.y.z` numeric comparison. Returns
   `false` on equal, on local-newer, and on any unparseable input (safe
   default: never claims an update exists it can't confirm).
@@ -54,7 +55,7 @@ Exports:
      (`{ lastChecked: <epoch ms>, latestVersion: <string> }`); missing/corrupt
      file is treated as empty.
   3. If `GIPYPOWERS_NO_UPDATE_CHECK` is set, or `Date.now() - lastChecked <
-     24h`, skip the network step.
+24h`, skip the network step.
   4. Otherwise, issue one bounded HTTPS GET (~1.5s timeout) for
      `https://raw.githubusercontent.com/g-automation/gipypowers/main/package.json`,
      parse `.version`, and rewrite the cache file with the new
@@ -63,9 +64,9 @@ Exports:
      `latestVersion` is left untouched on failure so a previously-discovered
      notice doesn't flicker away on a transient error).
   5. Return a single-line string (`"gipypowers vX.Y.Z available (you have
-     vA.B.C) — run /check-for-updates"`) if the cached `latestVersion` is
+vA.B.C) — run /check-for-updates"`) if the cached `latestVersion` is
      newer than local, else `''`.
-  Every step wrapped in try/catch; any failure anywhere yields `''`.
+     Every step wrapped in try/catch; any failure anywhere yields `''`.
 
 - `hooks/gipypowers-activate.js`: after building the existing payload, call
   `getUpdateNotice(ROOT)` and append the result as a trailing line if
@@ -76,6 +77,7 @@ Exports:
 
 `SKILL.md` + `agents/openai.yaml` per the standard skill shape. Behavior the
 skill instructs the agent to follow:
+
 1. Read local version (`package.json` at the plugin root).
 2. Fetch `raw.githubusercontent.com/g-automation/gipypowers/main/package.json`
    and read its version.
@@ -84,7 +86,7 @@ skill instructs the agent to follow:
    root is inside a git working tree:
    - **Git working copy** (Codex install, manual clone, or this dev repo):
      run `git status` first; if clean, confirm with the user, then `git
-     pull`. If dirty, tell the user to commit/stash first — never pull over
+pull`. If dirty, tell the user to commit/stash first — never pull over
      uncommitted changes.
    - **Host-managed cache dir, no `.git`** (typical Claude Code marketplace
      install): tell the user to open `/plugin`, refresh the `gipypowers`

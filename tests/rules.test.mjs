@@ -56,7 +56,12 @@ test('ponytail-full requires insightful concise comments', () => {
 test('automatic output layers contain action and anti-slop guidance', () => {
   const adhd = read('rules/i-have-adhd-full.md');
   const slop = read('rules/no-ai-slop-full.md');
-  for (const marker of ['action first', 'numbered steps', 'state', 'lists at five'])
+  for (const marker of [
+    'action first',
+    'numbered steps',
+    'state',
+    'lists at five',
+  ])
     assert.ok(
       adhd.toLowerCase().includes(marker),
       `missing ADHD marker: ${marker}`,

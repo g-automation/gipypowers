@@ -27,11 +27,13 @@
 The root cause: `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` are stuck at `0.1.0` while `package.json` is at `0.2.0`. Claude Code's native update flow reads the manifest's `version` field to decide whether a new release exists — since it never changed, Claude Code never saw an update to offer.
 
 **Files:**
+
 - Create: `tests/version-sync.test.mjs`
 - Modify: `.claude-plugin/plugin.json`
 - Modify: `.codex-plugin/plugin.json`
 
 **Interfaces:**
+
 - Produces: no code interface — this task only guarantees `package.json`, `.claude-plugin/plugin.json`, and `.codex-plugin/plugin.json` all share the same `version` string. Later tasks don't depend on this beyond "the test suite is green."
 
 - [ ] **Step 1: Write the failing test**
@@ -113,10 +115,12 @@ git commit -m "fix: sync plugin manifest versions with package.json, guard again
 ### Task 2: Update-check library + unit test
 
 **Files:**
+
 - Create: `hooks/lib/update-check.js`
 - Create: `tests/update-check.test.mjs`
 
 **Interfaces:**
+
 - Consumes: nothing from earlier tasks.
 - Produces (for Task 3): `module.exports.isNewerVersion(remote: string, local: string): boolean` and `module.exports.getUpdateNotice(root: string): Promise<string>` (empty string when there's nothing to report or on any failure).
 
@@ -252,9 +256,8 @@ function fetchRemoteVersion() {
 
 function readLocalVersion(root) {
   try {
-    return JSON.parse(
-      fs.readFileSync(path.join(root, 'package.json'), 'utf8'),
-    ).version;
+    return JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
+      .version;
   } catch (_) {
     return null;
   }
@@ -308,9 +311,11 @@ git commit -m "feat: add throttled GitHub update-check library"
 ### Task 3: Wire the notice into the SessionStart hook
 
 **Files:**
+
 - Modify: `hooks/gipypowers-activate.js` (full file, currently 55 lines)
 
 **Interfaces:**
+
 - Consumes: `getUpdateNotice(root: string): Promise<string>` from Task 2 (`hooks/lib/update-check.js`).
 - Produces: no new interface — the hook's JSON stdout contract (`hookSpecificOutput.additionalContext` / `additional_context`) is unchanged; it may now include one trailing line.
 
@@ -405,10 +410,12 @@ git commit -m "feat: surface update-check notice in the SessionStart payload"
 ### Task 4: `check-for-updates` skill
 
 **Files:**
+
 - Create: `skills/check-for-updates/SKILL.md`
 - Create: `skills/check-for-updates/agents/openai.yaml`
 
 **Interfaces:**
+
 - Consumes: nothing from earlier tasks (this is agent-facing instructions, not code) — but its "clear the notice" step writes the same cache file shape Task 2 reads/writes (`~/.gipypowers/update-check.json`, `{lastChecked, latestVersion}`).
 - Produces: nothing later tasks depend on.
 
@@ -416,7 +423,7 @@ git commit -m "feat: surface update-check notice in the SessionStart payload"
 
 Create `skills/check-for-updates/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: check-for-updates
 description: Use when the user asks to check for, or install, a gipypowers update, or when a session-start update notice appeared - detects whether this install is a git checkout or a Claude-Code-managed cache dir and gives the exact next action.
@@ -428,7 +435,7 @@ description: Use when the user asks to check for, or install, a gipypowers updat
 
 gipypowers ships from `github.com/g-automation/gipypowers`. This skill finds
 out whether a newer release exists and, if so, does (or tells you) the right
-thing for how *this* copy was installed — a plain git checkout (Codex, manual
+thing for how _this_ copy was installed — a plain git checkout (Codex, manual
 clone) has no host managing it, so `git pull` is safe and sufficient. A
 Claude Code marketplace install lives in a host-managed cache directory with
 no `.git` — never write into that directory directly; Claude Code owns it.
@@ -441,6 +448,7 @@ no `.git` — never write into that directory directly; Claude Code owns it.
 ROOT="${CLAUDE_PLUGIN_ROOT:-$PLUGIN_ROOT}"
 node -pe "JSON.parse(require('fs').readFileSync('$ROOT/package.json','utf8')).version"
 ```
+````
 
 ## Step 2: Read the latest published version
 
@@ -487,7 +495,8 @@ node -e "require('fs').writeFileSync(require('os').homedir()+'/.gipypowers/updat
 
 This keeps the passive session-start notice from repeating once the user is
 already current.
-```
+
+````
 
 - [ ] **Step 2: Create agents/openai.yaml**
 
@@ -497,7 +506,7 @@ Create `skills/check-for-updates/agents/openai.yaml`:
 interface:
   display_name: 'check-for-updates'
   short_description: 'Use when checking for or installing a gipypowers update.'
-```
+````
 
 - [ ] **Step 3: Verify the skill shape**
 
@@ -519,9 +528,11 @@ git commit -m "feat: add check-for-updates skill"
 ### Task 5: README + final verification
 
 **Files:**
+
 - Modify: `README.md`
 
 **Interfaces:**
+
 - Consumes: nothing new — documents the behavior built in Tasks 1-4.
 
 - [ ] **Step 1: Add an "Updating" section**

@@ -35,3 +35,10 @@ test('bootstrap enforces inline execution without a mode choice', () => {
   assert.ok(t.includes('execute inline by default'));
   assert.ok(!t.includes('choose between inline and sub-agent'));
 });
+
+test('bootstrap enforces one commit with amend-only corrections', () => {
+  const t = read('skills/using-superpowers/SKILL.md').toLowerCase();
+  assert.ok(t.includes('single commit'));
+  assert.ok(t.includes('commit --amend'));
+  assert.ok(t.includes('exactly one'));
+});
