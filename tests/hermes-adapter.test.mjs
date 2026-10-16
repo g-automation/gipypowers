@@ -29,11 +29,19 @@ class Mock:
     def register_system_prompt_section(self, name, callback, **kwargs): self.sections[name] = (callback, kwargs)
 ctx = Mock()
 module.register(ctx)
-module._run_update_notice = lambda root: "Gipypowers v1.1.0 is available."
+updates = []
+def startup_update(root):
+    updates.append(str(root))
+    return "Gipypowers v1.1.0 was installed by Hermes."
+module._run_startup_update = startup_update
+ctx.hooks["on_session_start"]({"cwd": sys.argv[2], "session_id": "test-session"})
 session = ctx.sections["gipypowers.session"][0]({"cwd": sys.argv[2], "session_id": "test-session"})
 turn = ctx.hooks["pre_llm_call"](user_message="Fix the failing auth token revocation test", session_id="test-session")
 again = ctx.hooks["pre_llm_call"](user_message="Run the regression test", session_id="test-session")
-print(json.dumps({"skills": [name for name, _ in ctx.skills], "session": session, "turn": turn, "again": again}))
+ctx.hooks["on_session_start"]({"cwd": sys.argv[2]})
+no_id_turn = ctx.hooks["pre_llm_call"](user_message="Find the project session policy", cwd=sys.argv[2])
+no_id_again = ctx.hooks["pre_llm_call"](user_message="Run the regression test", cwd=sys.argv[2])
+print(json.dumps({"skills": [name for name, _ in ctx.skills], "session": session, "turn": turn, "again": again, "no_id_turn": no_id_turn, "no_id_again": no_id_again, "updates": updates}))
 `;
     const output = execFileSync(
       'python3',
@@ -50,11 +58,23 @@ print(json.dumps({"skills": [name for name, _ in ctx.skills], "session": session
     assert.ok(result.session.length <= 4000);
     assert.match(result.turn.context, /systematic-debugging/);
     assert.match(result.turn.context, /Memory CLI:/);
-    assert.match(result.turn.context, /Gipypowers v1\.1\.0 is available/);
+    assert.match(
+      result.turn.context,
+      /Gipypowers v1\.1\.0 was installed by Hermes/,
+    );
     assert.doesNotMatch(
       result.again.context,
-      /Gipypowers v1\.1\.0 is available/,
+      /Gipypowers v1\.1\.0 was installed by Hermes/,
     );
+    assert.match(
+      result.no_id_turn.context,
+      /Gipypowers v1\.1\.0 was installed by Hermes/,
+    );
+    assert.doesNotMatch(
+      result.no_id_again.context,
+      /Gipypowers v1\.1\.0 was installed by Hermes/,
+    );
+    assert.equal(result.updates.length, 2);
   } finally {
     rmSync(project, { recursive: true, force: true });
   }
@@ -63,6 +83,9 @@ print(json.dumps({"skills": [name for name, _ in ctx.skills], "session": session
 test('Hermes plugin does not request privileged host capabilities', () => {
   const manifest = readFileSync(join(ROOT, 'plugin.yaml'), 'utf8');
   assert.match(manifest, /^name: gipypowers/m);
-  assert.match(manifest, /provides_hooks:[\s\S]*pre_llm_call/);
+  assert.match(
+    manifest,
+    /provides_hooks:[\s\S]*on_session_start[\s\S]*pre_llm_call/,
+  );
   assert.doesNotMatch(manifest, /^capabilities:/m);
 });

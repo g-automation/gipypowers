@@ -15,6 +15,7 @@ test('claude hooks.json registers SessionStart, UserPromptSubmit, and SubagentSt
   assert.ok(
     h.SessionStart[0].hooks[0].command.includes('gipypowers-activate.js'),
   );
+  assert.equal(h.SessionStart[0].hooks[0].timeout, 15);
   assert.ok(
     h.SubagentStart[0].hooks[0].command.includes('gipypowers-subagent.js'),
   );
@@ -27,6 +28,7 @@ test('claude hooks.json registers SessionStart, UserPromptSubmit, and SubagentSt
 test('codex hooks.json uses PLUGIN_ROOT for startup and prompt activation', () => {
   const h = j('hooks/hooks-codex.json').hooks;
   assert.equal(h.SessionStart[0].matcher, 'startup|resume|clear|compact');
+  assert.equal(h.SessionStart[0].hooks[0].timeout, 15);
   assert.ok(h.SessionStart[0].hooks[0].command.includes('${PLUGIN_ROOT}'));
   assert.ok(!h.SessionStart[0].hooks[0].command.includes('CLAUDE_PLUGIN_ROOT'));
   assert.ok(h.UserPromptSubmit[0].hooks[0].command.includes('${PLUGIN_ROOT}'));

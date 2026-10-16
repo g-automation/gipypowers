@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .claude-plugin/plugin.json
+      - .codex-plugin/plugin.json
+      - .github/workflows/release.yml
+      - CHANGELOG.md
+      - package-lock.json
+      - package.json
+      - plugin.yaml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'g-automation/gipypowers'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test and lint release commit
+        run: |
+          npm test
+          npm run lint
+
+      - name: Publish the matching GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="$(node -e "const { version } = require('./package.json'); const { parseVersion } = require('./core/update-check'); if (!parseVersion(version)) process.exit(1); process.stdout.write(version)")"
+          TAG="v${VERSION}"
+
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "${TAG} already has a GitHub release."
+            exit 0
+          fi
+
+          RELEASE_ARGS=(--title "Gipypowers ${TAG}" --generate-notes)
+          if [[ "${VERSION}" == *-* ]]; then
+            RELEASE_ARGS+=(--prerelease)
+          fi
+
+          REMOTE_TAG="$(git ls-remote --tags --refs origin "refs/tags/${TAG}" | awk 'NR == 1 { print $1 }')"
+          if [[ -n "${REMOTE_TAG}" ]]; then
+            git fetch --force origin "refs/tags/${TAG}:refs/tags/${TAG}"
+            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
+            if [[ "${TAG_COMMIT}" != "${GITHUB_SHA}" ]]; then
+              echo "::error::${TAG} points to ${TAG_COMMIT}, not ${GITHUB_SHA}; refusing to publish."
+              exit 1
+            fi
+            gh release create "${TAG}" --verify-tag "${RELEASE_ARGS[@]}"
+          else
+            gh release create "${TAG}" --target "${GITHUB_SHA}" "${RELEASE_ARGS[@]}"
+          fi

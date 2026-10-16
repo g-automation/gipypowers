@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
   "description": "Unified project memory and automatically selected engineering workflows for Claude Code, Codex, and Hermes Agent.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
   "keywords": [

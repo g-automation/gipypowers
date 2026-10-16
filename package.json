@@ -1,6 +1,6 @@
 {
   "name": "gipypowers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unified project memory and automatic engineering workflow routing for Codex, Claude Code, and Hermes Agent.",
   "license": "MIT",
   "engines": {

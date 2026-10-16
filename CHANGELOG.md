@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.1 — 2026-10-16
+
+- Apply Codex marketplace updates automatically at safe session starts and
+  verify the installed version through Codex.
+- Document Claude Code marketplace auto-update and Hermes Gateway auto-apply
+  requirements, including the one-time update needed by existing installs.
+- Keep host-managed installation paths intact and provide actionable fallback
+  guidance when native updates are disabled or unavailable.
+
 ## 1.0.0 — 2026-10-16
 
 - Add shared, project-local Markdown memory with provenance, versioned edits,

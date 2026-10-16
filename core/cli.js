@@ -84,7 +84,7 @@ function printHelp() {
       `  task show | task complete\n` +
       `  route --prompt TEXT\n` +
       `  context session | context prompt --prompt TEXT [--plugin-root PATH]\n` +
-      `  update check\n`,
+      `  update check | startup [--host HOST] [--root PATH] [--plugin-root PATH]\n`,
   );
 }
 

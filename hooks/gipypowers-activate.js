@@ -10,7 +10,7 @@ const {
   buildSessionContext,
   formatHookOutput,
 } = require('./lib/activation');
-const { getUpdateNotice } = require('../core/update-check');
+const { getStartupUpdateNotice } = require('../core/update-check');
 
 const ROOT = path.resolve(__dirname, '..');
 const MAX_INPUT_BYTES = 512 * 1024;
@@ -80,7 +80,7 @@ function main(input = readHookInput()) {
     const source = input.source || input.session_source || '';
     if (!source || source === 'startup') {
       const taskState = require('../core/task-state').readTaskState(root);
-      getUpdateNotice(ROOT, {
+      getStartupUpdateNotice(ROOT, {
         configRoot: root,
         host: hostName(),
         activeTask: Boolean(taskState),
