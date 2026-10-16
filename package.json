@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
-  "version": "0.4.0",
-  "description": "Canonical gipyware plugin: inline-first, token-efficient automatic output and engineering helpers plus on-demand Superpowers for Claude and Codex.",
+  "version": "0.5.0",
+  "description": "Canonical gipyware plugin: inline-first, token-efficient automatic output, single-commit engineering workflows, and on-demand Superpowers for Claude and Codex.",
   "license": "MIT",
   "scripts": {
     "test": "node --test tests/*.test.mjs",

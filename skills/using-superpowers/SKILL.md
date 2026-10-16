@@ -17,6 +17,7 @@ rules for using the available layers.
 ## Priority
 
 Execute inline by default; do not ask whether to use inline or sub-agent.
+Single commit: every implementation ends with exactly one commit; use `git commit --amend` for later corrections.
 
 Use process skills first, then implementation skills:
 
