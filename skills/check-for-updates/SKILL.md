@@ -1,49 +1,61 @@
 ---
 name: check-for-updates
-description: Use when the user asks about a Gipypowers update or a host reports one; inspect the stable release and use the host's native updater
+description: Use when a user asks about a Gipypowers update, an update fails, or a host reports an available version
 ---
 
 # Check for Gipypowers Updates
 
-Gipypowers checks the latest stable GitHub release at session start and
-provides a host-specific action when an update is available. For an explicit
-check, run the shared CLI from the plugin installation:
+Gipypowers checks stable releases at session startup. Use this explicit command
+for a read-only status check:
 
 ```sh
 node "$PLUGIN_ROOT/core/cli.js" update check --host codex
 ```
 
-Use `--host claude` or `--host hermes` when running in those hosts. Pass
-`--root PATH` to read project version-pin settings and `--plugin-root PATH` if
-the plugin path is not available in the environment.
+Use `--host claude` or `--host hermes` in those hosts. Pass `--root PATH` to
+read project settings and `--plugin-root PATH` when the plugin path is not in
+the environment.
 
-## Update Policy
+## Host Update Rules
 
-- Use only a stable release that matches the Gipypowers repository and has
-  valid semantic-version metadata. Gipypowers checks release identity and
-  digest metadata; it does not claim to verify downloaded artifact bytes.
-- Respect `GIPYPOWERS_NO_UPDATE_CHECK=1`, `GIPYPOWERS_VERSION_PIN`, and
-  `.gipypowers/config.json`'s `versionPin` setting.
-- Let the host manager own installation, rollback, user data, and managed
-  caches. Never run `git pull` in a host plugin directory, edit a plugin cache,
-  or execute a downloaded installer.
-- Defer updates while a task checkpoint is active.
-- If the host cannot apply an update safely, give the native next step:
+- **Codex:** Gipypowers refreshes only the named `gipypowers` marketplace at
+  startup when a newer stable release exists and no tracked task is active. It
+  verifies the installed version with `codex plugin list`. Set
+  `GIPYPOWERS_AUTO_UPDATE=0` or `autoUpdate: false` in
+  `.gipypowers/config.json` to opt out.
+- **Claude Code:** Let Claude Code's marketplace auto-updater apply updates.
+  Third-party marketplace auto-update is off by default; enable it once with
+  `/plugin` → **Marketplaces** → **gipypowers** → **Enable auto-update**. Do not
+  run a plugin update from a hook or override this marketplace setting. Claude
+  Code refreshes after session start; the next session loads the updated plugin.
+- **Hermes Agent:** Let Hermes' scheduled updater apply tracked Git plugin
+  updates. To opt in, run `hermes config set plugins.auto_apply true`; the
+  Gateway checks on its configured schedule (24 hours by default, while the
+  Gateway is active) and Hermes keeps its update security scan. Do not run
+  `hermes plugins update` from a hook or edit Hermes configuration for the user.
+- For Claude or Hermes, explain the native opt-in if it is not already enabled.
+  Do not claim an update succeeded before the host's plugin list shows the
+  target version.
+
+Manual commands:
 
 ```sh
+# Codex
+codex plugin marketplace upgrade gipypowers
+
 # Claude Code
-claude plugin update gipypowers
+claude plugin marketplace update gipypowers
+claude plugin update gipypowers@gipypowers
 
 # Hermes Agent
 hermes plugins update gipypowers
-
-# Codex: refresh the marketplace, then update Gipypowers in the Plugins manager
-codex plugin marketplace upgrade gipypowers
 ```
 
-Codex's marketplace command refreshes the configured marketplace; select the
-plugin update in the Codex Plugins manager afterward. Do not claim that the
-plugin itself was updated until its installed version confirms the change.
-
-If release discovery is unavailable, report that fact without guessing a
-version. Do not ask for permission to run a read-only version check.
+Respect `GIPYPOWERS_NO_UPDATE_CHECK=1`, `GIPYPOWERS_VERSION_PIN`, and
+`.gipypowers/config.json`'s `versionPin`. `GIPYPOWERS_AUTO_UPDATE=0` disables
+Gipypowers' Codex updater; host-native Claude and Hermes settings control their
+own automatic updates. Installations from before the updater was introduced
+need one host-native update first because older plugin code cannot update
+itself. Never edit host-managed caches, run `git pull` in an installed plugin,
+or execute a downloaded installer. If release discovery fails, report that
+without guessing a version.

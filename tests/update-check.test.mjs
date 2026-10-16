@@ -14,6 +14,8 @@ const {
   isNewerVersion,
   parseVersion,
   RELEASE_URL,
+  hostUpdatePlan,
+  runAutomaticUpdate,
   validateRelease,
 } = require('../hooks/lib/update-check.js');
 
@@ -132,12 +134,216 @@ test('host update guidance uses the native manager and defers active work', () =
   );
   assert.equal(
     hostPolicy('claude', hermes).command,
-    'claude plugin update gipypowers',
+    'claude plugin update gipypowers@gipypowers',
   );
   assert.equal(
     hostPolicy('hermes', hermes, { activeTask: true }).action,
     'defer',
   );
+});
+
+test('automatic update plans use fixed native commands without accepting prompts', () => {
+  assert.deepEqual(hostUpdatePlan('codex').updates, [
+    {
+      operation: 'update',
+      command: 'codex',
+      args: ['plugin', 'marketplace', 'upgrade', 'gipypowers', '--json'],
+      timeoutMs: 6500,
+    },
+  ]);
+  assert.deepEqual(hostUpdatePlan('claude').updates, []);
+  assert.equal(hostUpdatePlan('claude').nativeAutoUpdate, 'marketplace');
+  assert.deepEqual(hostUpdatePlan('hermes').updates, []);
+  assert.equal(hostUpdatePlan('hermes').nativeAutoUpdate, 'scheduled');
+  assert.deepEqual(hostUpdatePlan('codex').verify, {
+    operation: 'verify-version',
+    command: 'codex',
+    args: ['plugin', 'list', '--marketplace', 'gipypowers', '--json'],
+    timeoutMs: 2500,
+  });
+  assert.deepEqual(hostUpdatePlan('hermes').verify.args, [
+    'plugins',
+    'list',
+    '--json',
+  ]);
+  assert.deepEqual(hostUpdatePlan('hermes').autoApply.args, [
+    'config',
+    'get',
+    'plugins.auto_apply',
+  ]);
+});
+
+test('Codex automatic update uses its named marketplace and confirms the installed version', async () => {
+  const root = fixtureRoot();
+  const calls = [];
+  try {
+    const result = await runAutomaticUpdate(root, {
+      host: 'codex',
+      cacheFile: join(root, '.cache', 'release.json'),
+      stateFile: join(root, '.cache', 'auto-update.json'),
+      now,
+      fetchRelease: async () => release('1.1.0'),
+      runCommand: async (step) => {
+        calls.push(step);
+        return {
+          status: 0,
+          stdout:
+            step.operation === 'verify-version'
+              ? JSON.stringify({
+                  installed: [
+                    {
+                      pluginId: 'gipypowers@gipypowers',
+                      version: '1.1.0',
+                    },
+                  ],
+                })
+              : '',
+        };
+      },
+    });
+    assert.equal(result.status, 'updated');
+    assert.equal(result.latest, '1.1.0');
+    assert.equal(result.verifiedVersion, '1.1.0');
+    assert.equal(result.restartRequired, false);
+    assert.deepEqual(
+      calls.map(({ operation }) => operation),
+      ['update', 'verify-version'],
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('automatic updates defer active work and honor project opt-out', async () => {
+  const root = fixtureRoot();
+  const configFile = join(root, '.gipypowers', 'config.json');
+  let calls = 0;
+  const options = {
+    host: 'codex',
+    cacheFile: join(root, '.cache', 'release.json'),
+    stateFile: join(root, '.cache', 'auto-update.json'),
+    now,
+    fetchRelease: async () => release('1.1.0'),
+    runCommand: async () => {
+      calls++;
+      return { status: 0, stdout: '{}' };
+    },
+  };
+  try {
+    const deferred = await runAutomaticUpdate(root, {
+      ...options,
+      activeTask: true,
+    });
+    assert.equal(deferred.status, 'deferred');
+    assert.equal(calls, 0);
+
+    mkdirSync(join(root, '.gipypowers'), { recursive: true });
+    writeFileSync(configFile, JSON.stringify({ autoUpdate: false }));
+    const disabled = await runAutomaticUpdate(root, options);
+    assert.equal(disabled.status, 'disabled');
+    assert.equal(calls, 0);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('automatic update failures provide a manual fallback and retry at most daily', async () => {
+  const root = fixtureRoot();
+  const calls = [];
+  const options = {
+    host: 'codex',
+    cacheFile: join(root, '.cache', 'release.json'),
+    stateFile: join(root, '.cache', 'auto-update.json'),
+    now,
+    fetchRelease: async () => release('1.1.0'),
+    runCommand: async (step) => {
+      calls.push(step);
+      return step.operation === 'verify-version'
+        ? { status: 0, stdout: '{"installed":[]}' }
+        : { status: 1, stdout: '', stderr: 'sensitive output is not exposed' };
+    },
+  };
+  try {
+    const failed = await runAutomaticUpdate(root, options);
+    assert.equal(failed.status, 'failed');
+    assert.match(
+      failed.policy.command,
+      /codex plugin marketplace upgrade gipypowers/,
+    );
+    assert.doesNotMatch(JSON.stringify(failed), /sensitive output/);
+
+    const retried = await runAutomaticUpdate(root, {
+      ...options,
+      now: now + 1000,
+    });
+    assert.equal(retried.status, 'retry-deferred');
+    assert.equal(calls.length, 1);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('Claude and Hermes defer application to explicit native auto-update settings', async () => {
+  const root = fixtureRoot();
+  try {
+    const common = {
+      cacheFile: join(root, '.cache', 'release.json'),
+      now,
+      fetchRelease: async () => release('1.1.0'),
+    };
+    const claudeCalls = [];
+    const claude = await runAutomaticUpdate(root, {
+      ...common,
+      host: 'claude',
+      stateFile: join(root, '.cache', 'claude-auto-update.json'),
+      runCommand: async (step) => {
+        claudeCalls.push(step.operation);
+        return {
+          status: 0,
+          stdout: JSON.stringify([
+            { id: 'gipypowers@gipypowers', version: '1.0.0' },
+          ]),
+        };
+      },
+    });
+    assert.equal(claude.status, 'host-auto-update-required');
+    assert.match(claude.reason, /if it is not already enabled/i);
+    assert.deepEqual(claudeCalls, ['verify-version']);
+
+    const hermesCalls = [];
+    const hermes = await runAutomaticUpdate(root, {
+      ...common,
+      host: 'hermes',
+      stateFile: join(root, '.cache', 'hermes-auto-update.json'),
+      runCommand: async (step) => {
+        hermesCalls.push(step.operation);
+        if (step.operation === 'verify-version')
+          return { status: 0, stdout: '[]' };
+        return { status: 0, stdout: 'false\n' };
+      },
+    });
+    assert.equal(hermes.status, 'host-auto-update-required');
+    assert.match(hermes.reason, /plugins\.auto_apply true/);
+    assert.deepEqual(hermesCalls, ['verify-version', 'check-auto-apply']);
+
+    hermesCalls.length = 0;
+    const scheduledHermes = await runAutomaticUpdate(root, {
+      ...common,
+      host: 'hermes',
+      stateFile: join(root, '.cache', 'hermes-auto-update.json'),
+      runCommand: async (step) => {
+        hermesCalls.push(step.operation);
+        if (step.operation === 'verify-version')
+          return { status: 0, stdout: '[]' };
+        return { status: 0, stdout: 'true\n' };
+      },
+    });
+    assert.equal(scheduledHermes.status, 'host-managed');
+    assert.match(scheduledHermes.reason, /Gateway checks.*24 hours/i);
+    assert.deepEqual(hermesCalls, ['verify-version', 'check-auto-apply']);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('update notices are withheld while a task checkpoint is active', async () => {

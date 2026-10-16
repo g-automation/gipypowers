@@ -61,7 +61,7 @@ test('CLI persists searchable memory, restores task state, and reports its versi
     assert.equal(state.status, 'implementing');
     assert.equal(state.next, 'Run focused tests');
     assert.equal(run(project, 'task', 'complete'), '{\n  "cleared": true\n}');
-    assert.equal(run(project, 'version'), '1.0.0');
+    assert.equal(run(project, 'version'), '1.0.1');
   } finally {
     rmSync(project, { recursive: true, force: true });
   }
@@ -80,6 +80,37 @@ test('CLI update command reaches the shared host-aware checker', () => {
       },
     );
     assert.equal(JSON.parse(output).status, 'disabled');
+  } finally {
+    rmSync(project, { recursive: true, force: true });
+  }
+});
+
+test('CLI startup updater exits without host calls when release checks are disabled', () => {
+  const project = mkdtempSync(join(tmpdir(), 'gipypowers-cli-update-startup-'));
+  try {
+    const output = execFileSync(
+      'node',
+      [
+        CLI,
+        'update',
+        'startup',
+        '--host',
+        'codex',
+        '--root',
+        project,
+        '--plugin-root',
+        ROOT,
+      ],
+      {
+        cwd: project,
+        env: { ...process.env, GIPYPOWERS_NO_UPDATE_CHECK: '1' },
+        encoding: 'utf8',
+      },
+    );
+    assert.deepEqual(JSON.parse(output), {
+      status: 'disabled',
+      notice: '',
+    });
   } finally {
     rmSync(project, { recursive: true, force: true });
   }
