@@ -1,6 +1,6 @@
 ---
 name: dispatching-parallel-agents
-description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+description: Use only when independent work has a measured parallel benefit greater than its context, token, and coordination cost
 ---
 
 # Dispatching Parallel Agents
@@ -11,11 +11,13 @@ Context window is 272k–400k tokens. Never let this session's working-context, 
 
 ## Overview
 
-You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
+Delegate only when expected time saved or review quality exceeds prompt setup,
+token use, and coordination overhead. Independent work alone does not justify
+subagents. When delegation is worthwhile, give agents only the context they
+need rather than the full session history.
 
-When you have multiple unrelated failures (different test files, different subsystems, different bugs), investigating them sequentially wastes time. Each investigation is independent and can happen in parallel.
-
-**Core principle:** Dispatch one agent per independent problem domain. Let them work concurrently.
+**Core principle:** Dispatch the smallest useful number of agents only when
+their measured benefit exceeds their cost; otherwise continue inline.
 
 ## When to Use
 
@@ -43,6 +45,7 @@ digraph when_to_use {
 - Multiple subsystems broken independently
 - Each problem can be understood without context from others
 - No shared state between investigations
+- A quick estimate shows parallel time or review gains outweigh coordination and token cost
 
 **Don't use when:**
 

@@ -5,16 +5,16 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
-Execute an approved plan with a fresh implementer per task, a two-stage review
-after each task, and one final whole-branch review. Keep work continuous; stop
-only for a blocker, real ambiguity, or completion.
+Execute plans inline by default. Use this optional workflow only when independent
+tasks offer a clear, measured benefit over token and coordination cost. Keep
+work continuous; stop only for a blocker, real ambiguity, or completion.
 
 ## Budget and selection
 
 Keep each subagent's working context under ~27k tokens (10% of the window).
 Persist bulky research to files and pass paths plus concise requirements.
-Choose model by task: fast/light for bounded edits, medium for ordinary coding,
-strongest available for architecture or review. Never expose private reasoning.
+Use the smallest capable model and number of agents; do not delegate work that
+is faster or cheaper to complete inline. Never expose private reasoning.
 
 ## Pre-flight
 
@@ -23,19 +23,18 @@ strongest available for architecture or review. Never expose private reasoning.
    before dispatching.
 3. Create one task brief per independent task with goal, exact files, constraints,
    verification command, and expected result.
-4. Confirm baseline tests pass; stop and report failures before implementation.
+4. Run relevant baseline checks. Record pre-existing failures and continue when
+   they do not block the planned change.
 
 ## Task loop
 
 For each task, in order:
 
 1. Dispatch one implementer with only task-relevant context and the 27k budget.
-2. Inspect its diff and run the task's tests yourself.
-3. Dispatch a spec-compliance reviewer with the plan, diff, and test output.
-4. Dispatch a code-quality reviewer for correctness, security, regressions, and
-   unnecessary complexity. Fix every Critical/Important finding, then rerun
-   tests; ask the human only when scope or architecture is genuinely unclear.
-5. Record completed task, commit hash, tests, and remaining work in the ledger.
+2. Inspect its diff and run focused verification yourself.
+3. Add an independent review only when risk or scope makes its value exceed
+   its token and coordination cost. Fix material findings and re-verify.
+4. Record completed task, commit hash, tests, and remaining work in the ledger.
 
 Never trust a status report without checking the diff and commands. Do not let
 agents modify files owned by another active task. Parallelize only tasks with
@@ -56,7 +55,7 @@ generated artifact. Use `finishing-a-development-branch` for merge/PR/cleanup.
 
 ## Stop conditions
 
-Stop dispatching when tests fail unexpectedly, a security/data-loss risk appears,
-the plan conflicts with repository instructions, or an agent lacks required
-context. Report exact evidence and ask one focused question. Do not paper over a
-failure with retries or speculative changes.
+Stop dispatching when a security/data-loss risk appears, the plan conflicts with
+repository instructions, or an agent lacks required context. Diagnose new test
+failures and recover inline; ask only when critical information is genuinely
+missing. Do not paper over a failure with unbounded retries or speculative changes.

@@ -1,12 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "gipypowers",
-  "description": "Canonical gipyware plugin combining automatic output/engineering capabilities with on-demand superpowers.",
+  "description": "Shared project memory, concise always-on rules, and automatic engineering workflow routing.",
   "owner": { "name": "gipyware", "url": "https://gipyware.com" },
   "plugins": [
     {
       "name": "gipypowers",
-      "description": "Automatic terse, ADHD-friendly, anti-slop output and minimal engineering + on-demand superpowers, tuned for Claude and Codex.",
+      "description": "Automatic skill routing and persistent project memory with concise engineering rules for Codex, Claude Code, and Hermes Agent.",
       "source": "./",
       "category": "productivity"
     }

@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
-  "description": "Canonical gipyware plugin: inline-first, token-efficient automatic output, single-commit engineering workflows, contextual helpers, and on-demand Superpowers.",
-  "version": "0.5.0",
+  "description": "Unified project memory and automatically selected engineering workflows for Claude Code, Codex, and Hermes Agent.",
+  "version": "1.0.0",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
   "keywords": [

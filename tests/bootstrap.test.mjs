@@ -10,15 +10,15 @@ const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 test('bootstrap keeps load-bearing invariants + adds budget note', () => {
   const t = read('skills/using-superpowers/SKILL.md');
   for (const m of [
-    'BEFORE any response',
+    'Before acting',
     'brainstorming',
-    'human partner',
+    'missing information',
     'Red Flags',
     '27k',
     'caveman',
     'ponytail',
     'cannot be disabled by user request',
-    "not workflows, they're always-on",
+    'automatic non-superpowers capabilities',
   ])
     assert.ok(t.toLowerCase().includes(m.toLowerCase()), `missing: ${m}`);
 });

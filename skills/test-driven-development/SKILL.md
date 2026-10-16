@@ -1,35 +1,33 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: Use as a test-first default for behavior changes and bug fixes; scale verification to task size
 ---
 
 # Test-Driven Development (TDD)
 
 ## Overview
 
-Write the test first. Watch it fail. Write minimal code to pass.
+Prefer a focused test-first cycle for behavior changes, then implement the
+smallest change and run relevant regressions.
 
-**Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.
-
-**Violating the letter of the rules is violating the spirit of the rules.**
+**Core principle:** A focused failing regression check gives strong evidence that the test catches the behavior being changed.
 
 ## When to Use
 
-**Always:** new features, bug fixes, refactoring, behavior changes.
+Use test-first for behavior changes, bug fixes, and refactors when a focused
+automated check is practical. For documentation, metadata, and simple
+configuration, use the smallest relevant validation instead of inventing a
+test. Keep implementation moving; do not ask permission to make this routine
+verification choice.
 
-**Exceptions (ask your human partner):** throwaway prototypes, generated code, configuration files.
+## Test-First Default
 
-Thinking "skip TDD just this once"? Stop. That's rationalization.
-
-## The Iron Law
-
-```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
-```
-
-Write code before the test? Delete it. Start over.
-
-**No exceptions:** don't keep it as "reference," don't "adapt" it while writing tests, don't look at it. Delete means delete. Implement fresh from tests. Period.
+Write a focused failing check before implementation when practical. Confirm it
+fails for the expected reason, implement the smallest change, then run the
+check and relevant regressions. If implementation already exists, add a
+targeted regression check before changing it; do not discard correct work just
+to restart the sequence. If a check is infeasible, use the strongest practical
+verification and state the limitation.
 
 ## Red-Green-Refactor
 
@@ -42,7 +40,7 @@ Write one minimal test showing what should happen. One behavior, clear name, rea
 
 ### Verify RED — Watch It Fail
 
-**MANDATORY. Never skip.** Run the test. Confirm: test fails (not errors), failure message is expected, fails because feature missing (not typos).
+When practical, run the test and confirm it fails for the expected reason, not because of a typo or setup error.
 
 - **Test passes?** You're testing existing behavior. Fix test.
 - **Test errors?** Fix error, re-run until it fails correctly.
@@ -53,7 +51,7 @@ Write the simplest code to pass the test. Don't add features, refactor other cod
 
 ### Verify GREEN — Watch It Pass
 
-**MANDATORY.** Run the test. Confirm: test passes, other tests still pass, output pristine (no errors/warnings).
+Run the focused test and relevant regression checks before reporting the change complete.
 
 - **Test fails?** Fix code, not test.
 - **Other tests fail?** Fix now.
@@ -76,33 +74,18 @@ Next failing test for next feature.
 
 ## Why Order Matters
 
-- **"I'll write tests after"** — tests written after code pass immediately, proving nothing (might test wrong thing, test implementation not behavior, miss edge cases). Test-first forces you to see it fail, proving it tests something.
-- **"I already manually tested it"** — ad-hoc, not systematic: no record, can't re-run, easy to forget under pressure.
-- **"Deleting X hours is wasteful"** — sunk cost fallacy. Keeping unverified code is technical debt.
-- **"TDD is dogmatic, pragmatic means adapting"** — TDD IS pragmatic: finds bugs before commit, prevents regressions, documents behavior, enables refactoring. "Pragmatic" shortcuts = debugging in production = slower.
-- **"Tests after achieve the same goals"** — no. Tests-after answer "what does this do?" (biased by your implementation). Tests-first answer "what should this do?" (force edge-case discovery before implementing).
+A focused failing regression check shows that a test covers the behavior being
+changed and keeps verification repeatable. Use proportionate checks for
+documentation, configuration, and other non-behavior changes. Do not discard
+correct work to recreate a red phase.
 
-## Common Rationalizations
+## Common Pitfalls
 
-| Excuse                                 | Reality                                                                 |
-| -------------------------------------- | ----------------------------------------------------------------------- |
-| "Too simple to test"                   | Simple code breaks. Test takes 30 seconds.                              |
-| "I'll test after"                      | Tests passing immediately prove nothing.                                |
-| "Tests after achieve same goals"       | Tests-after = "what does this do?" Tests-first = "what should this do?" |
-| "Already manually tested"              | Ad-hoc ≠ systematic. No record, can't re-run.                           |
-| "Deleting X hours is wasteful"         | Sunk cost fallacy. Keeping unverified code is technical debt.           |
-| "Keep as reference, write tests first" | You'll adapt it. That's testing after. Delete means delete.             |
-| "Need to explore first"                | Fine. Throw away exploration, start with TDD.                           |
-| "Test hard = design unclear"           | Listen to test. Hard to test = hard to use.                             |
-| "TDD will slow me down"                | TDD faster than debugging. Pragmatic = test-first.                      |
-| "Manual test faster"                   | Manual doesn't prove edge cases. You'll re-test every change.           |
-| "Existing code has no tests"           | You're improving it. Add tests for existing code.                       |
-
-## Red Flags - STOP and Start Over
-
-Code before test · test after implementation · test passes immediately · can't explain why test failed · tests added "later" · rationalizing "just this once" · "I already manually tested it" · "tests after achieve the same purpose" · "it's about spirit not ritual" · "keep as reference" or "adapt existing code" · "already spent X hours, deleting is wasteful" · "TDD is dogmatic, I'm being pragmatic" · "this is different because..."
-
-**All of these mean: Delete code. Start over with TDD.**
+- Tests added after implementation can inherit implementation bias; add a
+  targeted regression check before the next behavior change.
+- Do not invent tests for docs, metadata, or simple configuration.
+- When a test fails repeatedly, change the hypothesis or implementation
+  strategy instead of restarting code to satisfy a ritual.
 
 ## Example: Bug Fix
 
@@ -131,16 +114,16 @@ Can't check all boxes? You skipped TDD. Start over.
 
 ## When Stuck
 
-| Problem                | Solution                                                             |
-| ---------------------- | -------------------------------------------------------------------- |
-| Don't know how to test | Write wished-for API. Write assertion first. Ask your human partner. |
-| Test too complicated   | Design too complicated. Simplify interface.                          |
-| Must mock everything   | Code too coupled. Use dependency injection.                          |
-| Test setup huge        | Extract helpers. Still complex? Simplify design.                     |
+| Problem                | Solution                                                                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Don't know how to test | Find the smallest observable behavior and use the simplest practical check. Ask only if missing information blocks progress. |
+| Test too complicated   | Design too complicated. Simplify interface.                                                                                  |
+| Must mock everything   | Code too coupled. Use dependency injection.                                                                                  |
+| Test setup huge        | Extract helpers. Still complex? Simplify design.                                                                             |
 
 ## Debugging Integration
 
-Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression. Never fix bugs without a test.
+Bug found? Add a focused regression test when practical, then fix and verify the behavior.
 
 ## Testing Anti-Patterns
 
@@ -148,9 +131,6 @@ When adding mocks or test utilities, read [testing-anti-patterns.md](testing-ant
 
 ## Final Rule
 
-```
-Production code → test exists and failed first
-Otherwise → not TDD
-```
-
-No exceptions without your human partner's permission.
+Prefer test-first for behavior changes. For other work, run the strongest
+relevant verification that keeps the task moving. No approval is needed for
+routine verification choices.

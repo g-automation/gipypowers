@@ -4,18 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`gipypowers` is the canonical gipyware plugin — a single install giving a coding agent five automatic layers:
+`gipypowers` is the canonical gipyware plugin — a shared intelligence layer for Codex, Claude Code, and Hermes Agent:
 
 - **Caveman** (terse output) and **Ponytail** (YAGNI/smallest-diff) — always-on, injected via a `SessionStart` hook.
 - **i-have-adhd** (action-first, scannable output) and **no-ai-slop** (concrete, direct writing) — always-on, injected via the same hook.
-- **Superpowers** (brainstorming/planning/TDD/debugging/review) — 14 skills under `skills/`, loaded on demand; only this layer is user-selected.
+- **Superpowers** — 15 skills under `skills/`; prompt hooks route relevant guidance automatically and load only bounded excerpts.
+- **Project memory and task recovery** — shared Node.js core stores versioned Markdown under `.gipypowers/memory/` and ignored checkpoints under `.gipypowers/state/`.
+- **Host adapters** — Claude and Codex use lifecycle command hooks; Hermes uses `plugin.yaml`, `__init__.py`, and native hooks. Keep execution and permissions inside each host.
 
 It's a derivative/combination of five separate upstream MIT projects (caveman, ponytail, i-have-adhd, no-ai-slop, superpowers — see NOTICE), tuned for a ~10%-of-context (27k token) budget per subagent spawn. This repo is the _compiler/consumer_ of those projects, not one of the upstreams itself — it has its own remote (`g-automation/gipypowers`).
 
-Two parallel harness manifests describe the same plugin and **must be kept in sync** when hook or skill wiring changes:
+Host manifests describe the same plugin and **must stay in sync** when shared skill, hook, or release wiring changes:
 
 - `.claude-plugin/plugin.json` → `hooks/hooks.json` (Claude Code)
 - `.codex-plugin/plugin.json` → `hooks/hooks-codex.json` (OpenAI Codex)
+- `plugin.yaml` → `__init__.py` (Hermes Agent)
 
 ## Testing
 

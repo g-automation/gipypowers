@@ -1,43 +1,94 @@
-# gipypowers
+# Gipypowers
 
-gipypowers is a cross-host Claude Code/Codex plugin that combines concise communication with disciplined engineering. Install once; the non-Superpowers layers activate automatically on every session.
+Gipypowers v1.0.0 adds a shared, project-local memory and workflow orchestration layer to its existing concise communication rules and Superpowers library. It runs inside the host agent: Codex, Claude Code, and Hermes keep their native model, tools, permissions, and execution loop.
 
-## What Runs Automatically
+## Capabilities
 
-- **Caveman:** terse, high-signal responses; no filler or lexical commentary.
-- **Ponytail:** YAGNI, standard-library-first choices, smallest safe diff, and performance/safety guardrails.
-- **i-have-adhd:** action-first, scannable output with visible state and next steps.
-- **no-ai-slop:** concrete, direct language that removes generic AI phrasing.
-- **Helpers:** contextual review, commit-message, compression, help, stats, audit, debt, and gain guidance. Metrics and full help run only when requested.
+- **Always-on rules:** Caveman, Ponytail, i-have-adhd, no-ai-slop, and contextual helpers. `rules/automatic-capabilities.json` controls rule order.
+- **Automatic skill routing:** each submitted prompt is classified with deterministic rules. The host receives only matching skill excerpts and relevant project memory; longer workflow files remain available for progressive loading.
+- **Persistent memory:** durable Markdown pages under `.gipypowers/memory/`, with provenance, confidence, optimistic versions, revision history, a rebuildable index, deduplication, retrieval, export, archive, and delete operations.
+- **Task recovery:** compact checkpoints live under `.gipypowers/state/`, which Gipypowers adds to `.gipypowers/.gitignore`. Identical failures allow two retries before the guidance tells the agent to change strategy.
+- **Autonomous execution guidance:** work runs inline by default with the host's native tools. Planning scales with task size; no custom model loop, background service, permission bypass, or subagent dependency is added.
+- **Release checks:** stable GitHub release metadata is checked at most once per 24 hours. Updates remain under each host's package manager; Gipypowers does not rewrite plugin caches or run downloaded scripts.
 
-These layers execute together and cannot be disabled by a user request. The indexed source of truth is `rules/automatic-capabilities.json`.
+## Install and enable
 
-## Superpowers Workflow
+### Codex
 
-Superpowers is the only user-selected layer. When a task matches, the bootstrap requires the relevant skill: brainstorming, writing/executing plans, TDD, systematic debugging, worktrees, parallel/subagent development, requesting/receiving review, verification, finishing branches, writing skills, and update checks. Work executes inline by default; use sub-agent workflows only when explicitly invoked. Subagents receive the same concise reminders and the literal `27k` context-budget rule.
-Each implementation uses one commit; follow-up corrections amend that commit with `git commit --amend`.
+The repository includes `.agents/plugins/marketplace.json` and the required `.codex-plugin/plugin.json`. Install its GitHub marketplace:
 
-## Install
+```sh
+codex plugin marketplace add g-automation/gipypowers
+codex plugin add gipypowers@gipypowers
+```
 
-- **Claude Code:** add the marketplace entry in `.claude-plugin/marketplace.json`, then install or refresh `gipypowers` from `/plugin`.
-- **Codex:** install this repository as a plugin; `.codex-plugin/plugin.json` registers `skills/` and `hooks/hooks-codex.json`.
-- **Local development:** `npm install` installs lint/test tools.
+For a local checkout, use `codex plugin marketplace add .` from the repository root.
 
-Both hosts load the same capabilities; only the hook envelope differs.
+Review and trust the bundled hooks in `/hooks`; Codex does not run untrusted plugin hooks. Both `SessionStart` and `UserPromptSubmit` adapters use Codex's event-specific `additionalContext` output.
+
+### Claude Code
+
+Add the repository marketplace and install Gipypowers with Claude Code's `/plugin` manager:
+
+```text
+/plugin marketplace add g-automation/gipypowers
+/plugin install gipypowers@gipypowers
+```
+
+Claude Code loads the standard `hooks/hooks.json` and plugin skills. Its native marketplace updater remains responsible for plugin files.
+
+### Hermes Agent
+
+Install and enable this repository as a Hermes plugin using Hermes's native plugin manager:
+
+```sh
+hermes plugins install g-automation/gipypowers
+hermes plugins enable gipypowers
+```
+
+The root `plugin.yaml` and `__init__.py` adapter registers the shared skill directories and uses Hermes `pre_llm_call` plus its bounded system-prompt section when supported. Hermes project plugins are disabled by default; install or enable only in repositories you trust. Node.js is required for the shared core. The adapter does not change Hermes configuration or trust settings.
+
+Host setup and consent remain host-owned. Where a host requires hook review or explicit plugin enablement, automatic routing begins after that native step.
+
+## Project memory
+
+Memory is portable, human-readable, and intended for Git. It stores durable decisions, requirements, conventions, and validated lessons. It rejects common secret patterns, raw logs, oversized pages, and exact duplicate content. Review pages in `.gipypowers/memory/`; the CLI provides version-aware edits and export.
+
+```sh
+node "$PLUGIN_ROOT/core/cli.js" memory search --query "authentication sessions"
+node "$PLUGIN_ROOT/core/cli.js" memory list
+node "$PLUGIN_ROOT/core/cli.js" memory export
+```
+
+To create a page, provide explicit type, title, and provenance:
+
+```sh
+node "$PLUGIN_ROOT/core/cli.js" memory add \
+  --id auth-session-policy --type decision \
+  --title "Session authentication policy" \
+  --source "validated security review" --tags auth,security \
+  --content "Revoke sessions server-side when an account is disabled."
+```
+
+Revise with `--expected-version` so stale writes fail instead of overwriting newer knowledge. Use `memory archive --id ID --summary REASON` for superseded decisions, `memory delete --id ID` to remove incorrect or sensitive material, and `memory reindex` to rebuild the index from Markdown.
 
 ## Updates
 
-SessionStart checks GitHub at most once per 24 hours, with a 1.5-second timeout and silent failure. A newer release produces an actionable notice—never a silent file mutation. Set `GIPYPOWERS_NO_UPDATE_CHECK=1` to opt out, or `GIPYPOWERS_UPDATE_URL` to point at a compatible `package.json` mirror.
+`GIPYPOWERS_NO_UPDATE_CHECK=1` disables release checks. Set `GIPYPOWERS_VERSION_PIN` or `.gipypowers/config.json`'s `versionPin` to prevent upgrades beyond a chosen stable version. `node "$PLUGIN_ROOT/core/cli.js" update check` prints update status and the host's safe next step.
 
-- Git checkout (Codex/manual): run `git -C "$PLUGIN_ROOT" pull` after reviewing a clean worktree.
-- Claude marketplace cache: open `/plugin`, refresh the marketplace, and update there; never edit the cache directly.
+Gipypowers validates stable release tags and GitHub release metadata. Claude's native plugin update command, Hermes's plugin manager, and Codex's marketplace and Plugins manager own update application. If the host does not offer a safe targeted update path, Gipypowers reports the host command and next step. It never overwrites local plugin modifications, changes host config, mutates managed caches, or executes remote installation scripts.
 
-Ask the agent to use `check-for-updates` for detection and the correct host-specific command.
+## Development and verification
 
-## Development
+```sh
+npm test
+npm run lint
+```
 
-`npm test` runs all Node tests; `npm run lint` checks hooks; `git diff --check` catches whitespace errors. Keep manifests synchronized and update `NOTICE` when adapting upstream MIT work.
+The automated suite covers memory, routing, recovery, host hook envelopes, update policy, manifest wiring, and mocked Hermes registration. This release was also installed or validated with the native Codex, Claude Code, and Hermes CLIs; no interactive LLM coding session is claimed.
 
-## Credits
+## Architecture and attribution
 
-Adapted from caveman, ponytail, i-have-adhd, no-ai-slop, and superpowers. See `NOTICE` for attribution and licenses.
+`core/` is the shared dependency-free CommonJS layer. `hooks/lib/activation.js` adapts it to Codex and Claude Code. Root `__init__.py` adapts it to Hermes without replacing any host runtime. Design notes are in `docs/superpowers/specs/` and the implementation sequence in `docs/superpowers/plans/`.
+
+The project retains the original Gipypowers style and adapts Caveman, Ponytail, i-have-adhd, no-ai-slop, and Superpowers under their existing MIT attributions. OpenHands and brain.md informed architecture patterns only; no upstream code was copied. See [NOTICE](NOTICE) for licensing and attribution.

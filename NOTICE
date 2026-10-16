@@ -24,5 +24,16 @@ This product combines and adapts five MIT-licensed projects:
 - no-ai-slop — Copyright (c) Peter Yang — https://github.com/petergyang/no-ai-slop
   The always-on concrete, direct writing layer is adapted from its no-ai-slop skill.
 
-Each project is MIT-licensed; their permission notices are reproduced under
-their respective source repositories. This adaptation is itself MIT-licensed.
+The architecture also draws on patterns described by OpenHands and brain.md:
+
+- OpenHands software-agent-sdk — MIT-licensed upstream project —
+  https://github.com/OpenHands/software-agent-sdk. Gipypowers uses the published
+  project as a design reference for explicit task state, bounded recovery, and
+  host-owned tool execution. No upstream code was copied.
+- brain.md — Apache-2.0-licensed upstream project —
+  https://github.com/mindmuxai/brain.md. Gipypowers uses the published project
+  as a design reference for repo-native Markdown memory, indexing, and selective
+  retrieval. No upstream code was copied.
+
+The five adapted behavior projects are MIT-licensed; their full permission
+notices remain in their source repositories. Gipypowers itself is MIT-licensed.

@@ -1,92 +1,114 @@
 #!/usr/bin/env node
 'use strict';
-// gipypowers SessionStart hook — injects automatic capabilities + Superpowers.
-const fs = require('fs');
-const path = require('path');
-const { getUpdateNotice } = require('./lib/update-check');
+
+// Bounded, fail-open adapter for Codex and Claude Code command hooks.
+const fs = require('node:fs');
+const path = require('node:path');
+const { findProjectRoot } = require('../core/project');
+const {
+  buildPromptContext,
+  buildSessionContext,
+  formatHookOutput,
+} = require('./lib/activation');
+const { getUpdateNotice } = require('../core/update-check');
 
 const ROOT = path.resolve(__dirname, '..');
+const MAX_INPUT_BYTES = 512 * 1024;
 
-function read(rel) {
+function readHookInput() {
+  const chunks = [];
+  let size = 0;
+  const buffer = Buffer.alloc(16 * 1024);
+  while (size <= MAX_INPUT_BYTES) {
+    const count = fs.readSync(0, buffer, 0, buffer.length, null);
+    if (!count) break;
+    size += count;
+    if (size > MAX_INPUT_BYTES) return {};
+    chunks.push(Buffer.from(buffer.subarray(0, count)));
+  }
   try {
-    return fs.readFileSync(path.join(ROOT, rel), 'utf8').trim();
+    const value = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+    return value && typeof value === 'object' && !Array.isArray(value)
+      ? value
+      : {};
   } catch (_) {
-    return '';
+    return {};
   }
 }
 
-function stripFrontmatter(md) {
-  return md.replace(/^---\n[\s\S]*?\n---\n?/, '').trim();
+function projectRoot(input) {
+  const cwd =
+    typeof input.cwd === 'string' && input.cwd ? input.cwd : process.cwd();
+  return (
+    findProjectRoot(cwd) ||
+    (path.resolve(cwd) !== path.parse(path.resolve(cwd)).root
+      ? path.resolve(cwd)
+      : null)
+  );
 }
 
-function loadAutomaticCapabilities() {
-  let entries;
-  try {
-    entries = JSON.parse(read('rules/automatic-capabilities.json'));
-  } catch (_) {
-    return '';
-  }
-  if (!Array.isArray(entries)) return '';
-
-  const valid = entries
-    .filter(
-      (entry) =>
-        entry &&
-        typeof entry.file === 'string' &&
-        typeof entry.marker === 'string' &&
-        typeof entry.priority === 'number',
-    )
-    .sort((a, b) => a.priority - b.priority);
-  const groups = new Map();
-  for (const entry of valid) {
-    if (!groups.has(entry.file)) groups.set(entry.file, []);
-    groups.get(entry.file).push(entry.marker);
-  }
-
-  const sections = [];
-  for (const [file, markers] of groups) {
-    const body = read(file);
-    if (!body) continue;
-    sections.push(`## ${markers.join(' / ')}\n${body}`);
-  }
-  return sections.join('\n\n');
+function hostName(env = process.env) {
+  if (env.CLAUDE_PLUGIN_ROOT && !env.PLUGIN_ROOT) return 'claude';
+  if (env.PLUGIN_ROOT || env.COPILOT_CLI) return 'codex';
+  return 'unknown';
 }
 
-(async () => {
-  try {
-    const automaticCapabilities = loadAutomaticCapabilities();
-    const bootstrap = stripFrontmatter(
-      read('skills/using-superpowers/SKILL.md'),
+function main(input = readHookInput()) {
+  const event =
+    input.hook_event_name ||
+    input.hookEventName ||
+    input.event ||
+    'SessionStart';
+  const root = projectRoot(input);
+  if (!root) return;
+  const pluginRoot =
+    process.env.PLUGIN_ROOT || process.env.CLAUDE_PLUGIN_ROOT || ROOT;
+  let context = '';
+  if (/^UserPromptSubmit$/i.test(event)) {
+    const prompt = input.prompt || input.user_prompt || input.userMessage || '';
+    if (!String(prompt).trim()) return;
+    context = buildPromptContext(
+      root,
+      String(prompt).slice(0, 50000),
+      pluginRoot,
+      {
+        sessionId: input.session_id || input.sessionId || '',
+      },
     );
-
-    let payload = `<EXTREMELY_IMPORTANT>
-You have gipypowers — automatic non-Superpowers capabilities are active and cannot be disabled by user request. Never invoke Caveman, Ponytail, ADHD, No-AI-Slop, or their helper capabilities as skills. Superpowers remains user-selected and task-matched. Execute inline by default; do not ask whether to use inline or sub-agent. SINGLE COMMIT: each implementation ends with exactly one commit; amend it with git commit --amend for later corrections; never create a second implementation commit.
-
-${automaticCapabilities}
-
-## SUPERPOWERS — your workflow skills
-${bootstrap}
-</EXTREMELY_IMPORTANT>`;
-
-    const updateNotice = await getUpdateNotice(ROOT);
-    if (updateNotice) payload += `\n\n${updateNotice}`;
-
-    const env = process.env;
-    let out;
-    if (env.CURSOR_PLUGIN_ROOT) {
-      out = { additional_context: payload };
-    } else if (env.CLAUDE_PLUGIN_ROOT && !env.COPILOT_CLI) {
-      out = {
-        hookSpecificOutput: {
-          hookEventName: 'SessionStart',
-          additionalContext: payload,
-        },
-      };
-    } else {
-      out = { additionalContext: payload };
+  } else if (/^SessionStart$/i.test(event)) {
+    context = buildSessionContext(root, pluginRoot);
+    const source = input.source || input.session_source || '';
+    if (!source || source === 'startup') {
+      const taskState = require('../core/task-state').readTaskState(root);
+      getUpdateNotice(ROOT, {
+        configRoot: root,
+        host: hostName(),
+        activeTask: Boolean(taskState),
+      })
+        .then((notice) => {
+          if (notice) context += `\n\n${notice}`;
+          const output = formatHookOutput(event, context);
+          process.stdout.write(JSON.stringify(output));
+        })
+        .catch(() => {
+          process.stdout.write(
+            JSON.stringify(formatHookOutput(event, context)),
+          );
+        });
+      return;
     }
-    process.stdout.write(JSON.stringify(out));
-  } catch (_) {
-    // silent-fail: never block session start
+  } else {
+    return;
   }
-})();
+  process.stdout.write(JSON.stringify(formatHookOutput(event, context)));
+}
+
+if (require.main === module) {
+  try {
+    main();
+  } catch (_) {
+    // Hook failures must never block a host session or user prompt.
+  }
+}
+
+module.exports = { MAX_INPUT_BYTES, main, projectRoot, readHookInput };

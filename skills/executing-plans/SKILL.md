@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: Use when a reviewed implementation plan spans multiple dependent steps
 ---
 
 # Executing Plans
@@ -18,10 +18,10 @@ Single commit: keep all implementation changes in one commit; amend it with `git
 
 ### Step 1: Load and Review Plan
 
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create todos for the plan items and proceed
+1. Read the plan and compare it with the user's current request and repository.
+2. Resolve gaps using existing constraints and implementation evidence.
+3. Ask only when a missing decision materially changes the outcome or blocks safe progress.
+4. Track the remaining work compactly and proceed.
 
 ### Step 2: Execute Tasks
 
@@ -42,15 +42,16 @@ After all tasks complete and verified:
 
 ## When to Stop and Ask for Help
 
-**STOP executing immediately when:** hit a blocker (missing dependency, test fails, instruction unclear), plan has critical gaps preventing starting, you don't understand an instruction, verification fails repeatedly.
-
-**Ask for clarification rather than guessing.**
+When a command or test fails, diagnose the cause and make up to two bounded
+recovery attempts for the same failure. Then change strategy, revisit the plan,
+or report the concrete blocker. Ask only when required information is missing
+and cannot be inferred safely.
 
 ## When to Revisit Earlier Steps
 
 **Return to Review (Step 1) when:** partner updates the plan based on your feedback, fundamental approach needs rethinking.
 
-**Don't force through blockers** - stop and ask.
+Work around ordinary implementation failures. Pause only for a genuine blocker.
 
 ## Remember
 
@@ -65,6 +66,6 @@ After all tasks complete and verified:
 
 **Required workflow skills:**
 
-- **superpowers:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
+- **superpowers:using-git-worktrees** - Use when isolation materially benefits the change
 - **superpowers:writing-plans** - Creates the plan this skill executes
 - **superpowers:finishing-a-development-branch** - Complete development after all tasks

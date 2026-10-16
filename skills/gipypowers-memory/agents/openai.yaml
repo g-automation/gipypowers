@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gipypowers Memory"
+  short_description: "Retrieve and maintain validated project memory"
+  default_prompt: "Inspect relevant project memory and preserve validated decisions or reusable lessons."

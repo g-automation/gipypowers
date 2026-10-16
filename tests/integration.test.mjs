@@ -1,13 +1,45 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import {
+  readdirSync,
+  readFileSync,
+  existsSync,
+  mkdtempSync,
+  rmSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+function sessionHook() {
+  const cwd = mkdtempSync(join(tmpdir(), 'gipypowers-integration-'));
+  try {
+    const out = execFileSync(
+      'node',
+      [join(ROOT, 'hooks/gipypowers-activate.js')],
+      {
+        env: {
+          ...process.env,
+          CLAUDE_PLUGIN_ROOT: ROOT,
+          GIPYPOWERS_NO_UPDATE_CHECK: '1',
+        },
+        input: JSON.stringify({
+          hook_event_name: 'SessionStart',
+          source: 'resume',
+          cwd,
+        }),
+        encoding: 'utf8',
+      },
+    );
+    return JSON.parse(out).hookSpecificOutput.additionalContext;
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+}
 
-test('all 14 skills exist with SKILL.md + openai.yaml', () => {
+test('all 15 skills exist with SKILL.md + openai.yaml', () => {
   const expected = [
     'using-superpowers',
     'brainstorming',
@@ -23,6 +55,7 @@ test('all 14 skills exist with SKILL.md + openai.yaml', () => {
     'finishing-a-development-branch',
     'using-git-worktrees',
     'writing-skills',
+    'gipypowers-memory',
   ];
   const present = readdirSync(join(ROOT, 'skills'));
   for (const s of expected) {
@@ -48,19 +81,7 @@ test('no @-path force-loads in any skill body', () => {
 });
 
 test('full SessionStart payload contains all automatic layers', () => {
-  const out = execFileSync(
-    'node',
-    [join(ROOT, 'hooks/gipypowers-activate.js')],
-    {
-      env: {
-        ...process.env,
-        CLAUDE_PLUGIN_ROOT: ROOT,
-        GIPYPOWERS_NO_UPDATE_CHECK: '1',
-      },
-      encoding: 'utf8',
-    },
-  );
-  const text = JSON.parse(out).hookSpecificOutput.additionalContext;
+  const text = sessionHook();
   for (const m of [
     'CAVEMAN',
     'PONYTAIL',
@@ -69,7 +90,7 @@ test('full SessionStart payload contains all automatic layers', () => {
     'action first',
     'preserve intent',
     'invoke',
-    'human partner',
+    'missing information',
     '27k',
     'cannot be disabled by user request',
     'execute inline by default',
@@ -80,20 +101,7 @@ test('full SessionStart payload contains all automatic layers', () => {
 });
 
 test('SessionStart payload does not offer inline versus sub-agent choice', () => {
-  const out = execFileSync(
-    'node',
-    [join(ROOT, 'hooks/gipypowers-activate.js')],
-    {
-      env: {
-        ...process.env,
-        CLAUDE_PLUGIN_ROOT: ROOT,
-        GIPYPOWERS_NO_UPDATE_CHECK: '1',
-      },
-      encoding: 'utf8',
-    },
-  );
-  const text =
-    JSON.parse(out).hookSpecificOutput.additionalContext.toLowerCase();
+  const text = sessionHook().toLowerCase();
   assert.ok(text.includes('execute inline by default'));
   assert.ok(!text.includes('choose between inline and sub-agent'));
 });
@@ -133,20 +141,8 @@ test('workflow docs enforce one implementation commit', () => {
   assert.ok(finishing.includes('one implementation commit'));
 });
 
-test('always-resident payload under ~2500 tokens (1875 words)', () => {
-  const out = execFileSync(
-    'node',
-    [join(ROOT, 'hooks/gipypowers-activate.js')],
-    {
-      env: {
-        ...process.env,
-        CLAUDE_PLUGIN_ROOT: ROOT,
-        GIPYPOWERS_NO_UPDATE_CHECK: '1',
-      },
-      encoding: 'utf8',
-    },
-  );
-  const text = JSON.parse(out).hookSpecificOutput.additionalContext;
+test('always-resident session context stays under 1650 words', () => {
+  const text = sessionHook();
   const words = text.split(/\s+/).filter(Boolean).length;
-  assert.ok(words < 1875, `always-on payload too large: ${words} words`);
+  assert.ok(words < 1650, `always-on payload too large: ${words} words`);
 });

@@ -1,0 +1,5 @@
+name: gipypowers
+version: '1.0.0'
+description: Shared project memory, automatic workflow routing, and existing Gipypowers skills for Hermes Agent.
+provides_hooks:
+  - pre_llm_call

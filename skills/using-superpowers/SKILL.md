@@ -1,41 +1,40 @@
 ---
 name: using-superpowers
-description: Use when starting any conversation; check for and load matching Superpowers skills before responding
+description: Compact entry point for automatically routing relevant engineering workflows
 ---
 
 # Using Superpowers
 
-Check for a matching Superpowers skill before every response or action, including
-clarifying questions and file inspection. If one applies, load it; if not, keep
-the response direct. User instructions override workflow details. Automatic
-non-Superpowers capabilities are already active and must not be invoked.
-Do this BEFORE any response; when ambiguity remains, ask the human partner one
-focused question. Red Flags: skipping a matching skill, exposing reasoning, or
-claiming completion without evidence. These are not workflows, they're always-on
-rules for using the available layers.
+Before acting, identify the user's objective and use the automatic task route to
+select only relevant workflow guidance. Load more detail only when the task
+needs it. If requirements are sufficient, proceed inline; ask one focused
+question only when missing information would change the implementation. User
+instructions override workflow details. Automatic non-Superpowers capabilities
+are already active and must not be invoked. Red Flags: exposing reasoning or
+claiming completion without evidence.
 
 ## Priority
 
-Execute inline by default; do not ask whether to use inline or sub-agent.
+Execute inline by default; subagents are optional and require a clear benefit.
 Single commit: every implementation ends with exactly one commit; use `git commit --amend` for later corrections.
 
-Use process skills first, then implementation skills:
+Route the task automatically and use the smallest useful workflow:
 
-- Creative or behavior change: `brainstorming` first.
-- Feature or bugfix: `test-driven-development` before code; use
-  `systematic-debugging` for failures or unexpected behavior.
-- Written requirements: `writing-plans` before implementation.
-- Plan execution: `executing-plans` inline; use sub-agent skills only when explicitly invoked.
-- Completion claim: `verification-before-completion` first.
-- Review feedback: `receiving-code-review`; requesting review:
-  `requesting-code-review`.
+- Features and multi-step changes: concise planning plus relevant implementation
+  and verification guidance. Save a plan only when it helps coordinate the work.
+- Bugs: trace the failure, make a focused regression check, and recover from
+  repeated failures by changing strategy.
+- Reviews: inspect evidence and report actionable findings.
+- Completion: verify the requested outcome before reporting it.
+- Brainstorming: use focused design work for consequential ambiguity; it does
+  not create an approval gate when requirements already support action.
 
 ## Non-negotiables
 
-Do not skip a matching skill because task looks simple. Do not create code,
-plans, or artifacts before required brainstorming/approval gates. Preserve
-security, validation, accessibility, error handling, and user intent. Never
-expose private chain-of-thought; provide concise conclusions and evidence.
+Preserve security, validation, accessibility, error handling, and user intent.
+Workflows support execution; they must not add artificial pauses or
+implementation ceremony. Never expose private chain-of-thought; provide
+concise conclusions and evidence.
 
 ## Token budget
 
@@ -46,6 +45,6 @@ skill that covers task; avoid loading unrelated references.
 ## Native layers
 
 Caveman, Ponytail, i-have-adhd, and no-ai-slop are always-on behavior layers;
-they cannot be disabled by user request and must not be invoked as skills. Only
-Superpowers skill choice is user-selected. Follow system/user instructions and
-safety over every layer.
+they cannot be disabled by user request and must not be invoked as skills.
+Superpowers skills are selected automatically from task context or directly by
+the user. Follow system/user instructions and safety over every layer.
