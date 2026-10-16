@@ -1,7 +1,7 @@
 {
   "name": "gipypowers",
-  "version": "0.5.0",
-  "description": "Canonical gipyware plugin: inline-first, token-efficient automatic capabilities, single-commit workflows, plus on-demand Superpowers.",
+  "version": "1.0.0",
+  "description": "Unified project memory and automatic engineering workflow routing for Codex, Claude Code, and Hermes Agent.",
   "author": { "name": "gipyware", "url": "https://gipyware.com" },
   "license": "MIT",
   "keywords": [
@@ -16,8 +16,8 @@
   "hooks": "./hooks/hooks-codex.json",
   "interface": {
     "displayName": "gipypowers",
-    "shortDescription": "Automatic action-first, anti-slop output + minimal engineering workflows",
-    "longDescription": "Automatic Caveman, Ponytail, i-have-adhd, no-ai-slop, and contextual helper capabilities plus the on-demand Superpowers workflow — brainstorming, planning, TDD, debugging, review — tuned for Claude and Codex with a 10% context budget.",
+    "shortDescription": "Persistent project memory and automatic engineering workflows",
+    "longDescription": "Shared Markdown project memory, task recovery, automatic selection of relevant Superpowers, and concise Caveman, Ponytail, i-have-adhd, and no-ai-slop rules. Runs on native Codex, Claude Code, and Hermes Agent runtimes.",
     "developerName": "gipyware",
     "category": "Developer Tools",
     "capabilities": [

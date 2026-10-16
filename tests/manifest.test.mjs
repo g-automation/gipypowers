@@ -33,9 +33,28 @@ test('Claude and Codex manifests publish the same release version', () => {
   assert.equal(claude.version, packageJson.version);
   assert.equal(codex.version, packageJson.version);
   assert.equal(claude.name, codex.name);
+  assert.equal(packageJson.version, '1.0.0');
+  assert.equal(
+    j('package-lock.json').packages[''].version,
+    packageJson.version,
+  );
+  assert.match(
+    readFileSync(join(ROOT, 'plugin.yaml'), 'utf8'),
+    /version:\s*['"]?1\.0\.0/,
+  );
 });
 
 test('marketplace lists the gipypowers plugin', () => {
   const m = j('.claude-plugin/marketplace.json');
   assert.equal(m.plugins[0].name, 'gipypowers');
+});
+
+test('Codex repository marketplace points to the plugin root', () => {
+  const marketplace = j('.agents/plugins/marketplace.json');
+  const plugin = marketplace.plugins.find(
+    (entry) => entry.name === 'gipypowers',
+  );
+  assert.ok(plugin);
+  assert.equal(plugin.source.source, 'local');
+  assert.equal(plugin.source.path, './');
 });

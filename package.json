@@ -1,8 +1,25 @@
 {
   "name": "gipypowers",
-  "version": "0.5.0",
-  "description": "Canonical gipyware plugin: inline-first, token-efficient automatic output, single-commit engineering workflows, and on-demand Superpowers for Claude and Codex.",
+  "version": "1.0.0",
+  "description": "Unified project memory and automatic engineering workflow routing for Codex, Claude Code, and Hermes Agent.",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    ".agents/plugins",
+    ".claude-plugin",
+    ".codex-plugin",
+    "core",
+    "docs/superpowers",
+    "hooks",
+    "rules",
+    "skills",
+    "__init__.py",
+    "plugin.yaml",
+    "NOTICE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "lint": "eslint .",

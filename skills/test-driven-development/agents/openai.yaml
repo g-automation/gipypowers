@@ -1,3 +1,3 @@
 interface:
   display_name: 'test-driven-development'
-  short_description: 'Use when implementing any feature or bugfix, before writing implementation code.'
+  short_description: 'Use test-first for behavior changes and focused regression checks.'

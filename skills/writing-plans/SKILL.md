@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: Use when a change spans multiple dependent implementation steps or files
 ---
 
 # Writing Plans
@@ -11,11 +11,15 @@ Context window is 272k–400k tokens. Never let this session's working-context, 
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Single commit; use `git commit --amend` for later corrections.
+For substantial work, write a compact, executable plan that names affected
+files, sequence, and verification. For a small clear change, keep the plan
+internal and proceed. Do not repeat repository details that implementation can
+inspect directly. DRY. YAGNI. TDD. Single commit; use `git commit --amend` for
+later corrections.
 
 Assume a skilled developer who knows almost nothing about our toolset or problem domain, and doesn't know good test design well.
 
-**Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
+Announce a written plan only when sharing it helps coordinate substantial work.
 
 **Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.
 
@@ -25,7 +29,9 @@ Assume a skilled developer who knows almost nothing about our toolset or problem
 
 ## Scope Check
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+For independent subsystems, order work by dependency and ship coherent pieces
+within one implementation plan. Split only when a subsystem can be delivered
+and reviewed independently.
 
 ## File Structure
 
@@ -47,7 +53,8 @@ independently testable deliverable.
 
 ## Bite-Sized Task Granularity
 
-**Each step is one action (2-5 minutes):**
+Each step should end with a useful implementation or verification checkpoint;
+do not create artificial tasks merely to satisfy a checklist.
 
 - "Write the failing test" - step
 - "Run it to make sure it fails" - step

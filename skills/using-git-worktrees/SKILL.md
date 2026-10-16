@@ -1,17 +1,17 @@
 ---
 name: using-git-worktrees
-description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback
+description: Use when isolation materially benefits feature work; prefer native host worktrees
 ---
 
 # Using Git Worktrees
 
 ## Overview
 
-Ensure work happens in an isolated workspace. Prefer your platform's native worktree tools. Fall back to manual git worktrees only when no native tool is available.
+Use isolation when it protects concurrent work or simplifies integration.
+Prefer the host's native worktree tools and use a Git worktree when no native
+tool is available.
 
 **Core principle:** Detect existing isolation first. Then use native tools. Then fall back to git. Never fight the harness.
-
-**Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
 
 ## Step 0: Detect Existing Isolation
 
@@ -39,11 +39,8 @@ Report with branch state:
 
 **If `GIT_DIR == GIT_COMMON` (or in a submodule):** You are in a normal repo checkout.
 
-Has the user already indicated their worktree preference in your instructions? If not, ask for consent before creating a worktree:
-
-> "Would you like me to set up an isolated worktree? It protects your current branch from changes."
-
-Honor any existing declared preference without asking. If the user declines consent, work in place and skip to Step 2.
+Honor the user's workspace preference. If none is stated, use judgment: isolation
+is a reversible implementation choice, so proceed when it materially helps.
 
 ## Step 1: Create Isolated Workspace
 
@@ -51,7 +48,7 @@ Honor any existing declared preference without asking. If the user declines cons
 
 ### 1a. Native Worktree Tools (preferred)
 
-The user has asked for an isolated workspace (Step 0 consent). Do you already have a way to create a worktree? It might be a tool with a name like `EnterWorktree`, `WorktreeCreate`, a `/worktree` command, or a `--worktree` flag. If you do, use it and skip to Step 2.
+Do you already have a way to create a worktree? It might be a tool with a name like `EnterWorktree`, `WorktreeCreate`, a `/worktree` command, or a `--worktree` flag. If you do, use it and skip to Step 2.
 
 Native tools handle directory placement, branch creation, and cleanup automatically. Using `git worktree add` when you have a native tool creates phantom state your harness can't see or manage.
 
@@ -116,8 +113,8 @@ Run tests to ensure workspace starts clean:
 npm test / cargo test / pytest / go test ./...
 ```
 
-**If tests fail:** Report failures, ask whether to proceed or investigate.
-**If tests pass:** Report ready.
+If baseline tests fail, record the existing failures, diagnose what they cover,
+and proceed when the implementation can still be safely isolated.
 
 ### Report
 
@@ -141,7 +138,7 @@ Ready to implement <feature-name>
 | Neither exists                 | Check instruction file, then default `.worktrees/` |
 | Directory not ignored          | Add to .gitignore + commit                         |
 | Permission error on create     | Sandbox fallback, work in place                    |
-| Tests fail during baseline     | Report failures + ask                              |
+| Tests fail during baseline     | Record, diagnose, proceed when separable           |
 | No package.json/Cargo.toml     | Skip dependency install                            |
 
 ## Common Mistakes
@@ -150,10 +147,10 @@ Ready to implement <feature-name>
 - **Skipping detection** — creating a nested worktree inside an existing one. Fix: always run Step 0 before creating anything.
 - **Skipping ignore verification** — worktree contents get tracked, pollute git status. Fix: always use `git check-ignore` before creating project-local worktree.
 - **Assuming directory location** — creates inconsistency, violates project conventions. Fix: follow priority: explicit instructions > existing project-local directory > default.
-- **Proceeding with failing tests** — can't distinguish new bugs from pre-existing issues. Fix: report failures, get explicit permission to proceed.
+- **Proceeding without diagnosing failing baseline tests** — record the baseline and separate existing failures from new regressions.
 
 ## Red Flags
 
-**Never:** create a worktree when Step 0 detects existing isolation · use `git worktree add` when you have a native worktree tool (e.g., `EnterWorktree`) — this is the #1 mistake, if you have it, use it · skip Step 1a by jumping straight to Step 1b's git commands · create worktree without verifying it's ignored (project-local) · skip baseline test verification · proceed with failing tests without asking.
+**Never:** create a worktree when Step 0 detects existing isolation · use `git worktree add` when you have a native worktree tool (e.g., `EnterWorktree`) — this is the #1 mistake, if you have it, use it · skip Step 1a by jumping straight to Step 1b's git commands · create worktree without verifying it's ignored (project-local) · skip baseline test verification · ignore failing baseline tests without recording their cause.
 
 **Always:** run Step 0 detection first · prefer native tools over git fallback · follow directory priority: explicit instructions > existing project-local directory > default · verify directory is ignored for project-local · auto-detect and run project setup · verify clean test baseline.

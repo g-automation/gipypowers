@@ -1,19 +1,18 @@
 ---
 name: finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup
+description: Use when implementation is complete and ready to integrate; honor an explicit target, and present options only when the target is undecided
 ---
 
 # Finishing a Development Branch
 
 ## Overview
 
-Guide completion of development work by presenting clear options and handling chosen workflow.
+Complete the requested integration path. Present options only when the user has
+not specified whether to create a PR, merge, keep, or discard the work.
 
-**Core principle:** Verify tests → Detect environment → Present options → Execute choice → Clean up.
+**Core principle:** Verify → detect environment → follow the explicit target or present options → preserve user-owned work.
 
 Before integration, verify that the implementation has one implementation commit. Later corrections amend that commit; do not create a second implementation commit.
-
-**Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
 ## The Process
 
@@ -39,20 +38,8 @@ Stop. Don't proceed to Step 2.
 
 ### Step 2: Detect Environment
 
-**Determine workspace state before presenting options:**
-
-```bash
-GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
-GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
-```
-
-This determines which menu to show and how cleanup works:
-
-| State                                  | Menu                         | Cleanup                         |
-| -------------------------------------- | ---------------------------- | ------------------------------- |
-| `GIT_DIR == GIT_COMMON` (normal repo)  | Standard 4 options           | No worktree to clean up         |
-| `GIT_DIR != GIT_COMMON`, named branch  | Standard 4 options           | Provenance-based (see Step 6)   |
-| `GIT_DIR != GIT_COMMON`, detached HEAD | Reduced 3 options (no merge) | No cleanup (externally managed) |
+Inspect the repository, branch, and worktree owner. Use detectable state to
+choose options and cleanup; do not ask questions the repository can answer.
 
 ### Step 3: Determine Base Branch
 
@@ -60,11 +47,17 @@ This determines which menu to show and how cleanup works:
 git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 ```
 
-Or ask: "This branch split from main - is that correct?"
+Infer the base from `git merge-base` and repository history. Ask only if the
+base cannot be determined and the PR target materially changes the result.
 
 ### Step 4: Present Options
 
-**Normal repo and named-branch worktree — present exactly these 4 options:**
+If the user already requested a specific integration outcome, skip the menu
+and execute that outcome after verification. Do not merge or discard unless
+the user explicitly requested it.
+
+When the outcome is undecided, a normal repo and named-branch worktree can
+present these 4 options:
 
 ```
 Implementation complete. What would you like to do?
@@ -75,7 +68,7 @@ Implementation complete. What would you like to do?
 Which option?
 ```
 
-**Detached HEAD — present exactly these 3 options:**
+When the outcome is undecided on a detached HEAD, present these 3 options:
 
 ```
 Implementation complete. You're on a detached HEAD (externally managed workspace).
@@ -85,7 +78,8 @@ Implementation complete. You're on a detached HEAD (externally managed workspace
 Which option?
 ```
 
-**Don't add explanation** - keep options concise.
+Keep undecided-work options concise. Do not ask again when the user already
+specified the target.
 
 ### Step 5: Execute Choice
 

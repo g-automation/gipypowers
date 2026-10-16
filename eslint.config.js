@@ -22,6 +22,7 @@ module.exports = [
   {
     files: [
       'eslint.config.js',
+      'core/**/*.js',
       'hooks/**/*.js',
       'skills/**/*.js',
       'skills/**/*.cjs',
